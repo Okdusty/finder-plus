@@ -79,6 +79,12 @@ interface WorkUnitDao {
     )
     suspend fun requeueSkipped(pass: Int, now: Long): Int
 
+    /** Re-queue every skipped unit — used after any model download so its passes get re-attempted. */
+    @Query(
+        "UPDATE work_unit SET state = 0, attempt_count = 0, last_error = NULL, updated_at = :now WHERE state = 5"
+    )
+    suspend fun requeueAllSkipped(now: Long): Int
+
     @Query("SELECT COUNT(*) FROM work_unit WHERE pass = :pass AND state IN (0, 1, 2)")
     suspend fun pendingForPass(pass: Int): Int
 

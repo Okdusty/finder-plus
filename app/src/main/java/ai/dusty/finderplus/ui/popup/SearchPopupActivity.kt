@@ -211,6 +211,12 @@ class SearchPopupActivity : ComponentActivity() {
                             BottomBar(
                                 running = status.running || status.paused,
                                 onIndex = { permissionLauncher.launch(mediaPermissions()) },
+                                onModels = {
+                                    startActivity(
+                                        Intent(this@SearchPopupActivity,
+                                            ai.dusty.finderplus.ui.settings.SettingsActivity::class.java)
+                                    )
+                                },
                                 onPrivate = {
                                     startActivity(
                                         Intent(this@SearchPopupActivity,
@@ -876,7 +882,7 @@ private fun Thumb(uri: String, kind: MediaKind) {
 }
 
 @Composable
-private fun BottomBar(running: Boolean, onIndex: () -> Unit, onPrivate: () -> Unit) {
+private fun BottomBar(running: Boolean, onIndex: () -> Unit, onModels: () -> Unit, onPrivate: () -> Unit) {
     Row(
         Modifier.fillMaxWidth().padding(top = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -884,6 +890,7 @@ private fun BottomBar(running: Boolean, onIndex: () -> Unit, onPrivate: () -> Un
         Text("Tap a result to copy it", color = Dim, style = MaterialTheme.typography.labelSmall, modifier = Modifier.weight(1f))
         // The only door to the vault settings. Without it the feature exists but cannot be found,
         // which is the same as not existing for anyone who does not read the source.
+        TextButton(onClick = onModels) { Text("Models", fontSize = 12.sp) }
         TextButton(onClick = onPrivate) { Text("Private", fontSize = 12.sp) }
         TextButton(onClick = onIndex, enabled = !running) {
             Text(if (running) "Indexing…" else "Index now", fontSize = 12.sp)
