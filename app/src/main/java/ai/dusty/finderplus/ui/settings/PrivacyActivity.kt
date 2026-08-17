@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.ui.settings
+package ai.dusty.finderplus.ui.settings
 
 import android.app.Activity
 import android.content.Intent
@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -53,9 +54,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ai.rightone.finderplus.index.VaultEngine
-import ai.rightone.finderplus.index.VaultPolicy
-import ai.rightone.finderplus.index.VaultWorker
+import ai.dusty.finderplus.index.VaultEngine
+import ai.dusty.finderplus.index.VaultPolicy
+import ai.dusty.finderplus.index.VaultWorker
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -82,12 +83,14 @@ class PrivacyActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme(colorScheme = ai.rightone.finderplus.ui.popup.finderColorScheme()) {
+            MaterialTheme(colorScheme = ai.dusty.finderplus.ui.popup.finderColorScheme()) {
                 PrivacyScreen(
                     vm = vm,
                     onGrantAccess = { requestAllFiles() },
-                    onExportKey = { pass -> exportRecovery(pass) },
+                    onExportKey = { pass, name -> exportRecovery(pass, name) },
                     onImportKey = { pickRecovery() },
+                    onSaveKeyFile = { name -> saveKeyFile(name) },
+                    onOpenKeyFile = { openKeyFile() },
                     onClose = { finish() },
                 )
             }
@@ -128,16 +131,17 @@ class PrivacyActivity : ComponentActivity() {
      * the picker is only the fallback. Immediately offers to share it too: a copy that never leaves
      * the phone is a copy that dies with the phone.
      */
-    private fun exportRecovery(passphrase: String) {
+    private fun exportRecovery(passphrase: String, fileName: String) {
         val blob = runCatching {
-            ai.rightone.finderplus.media.VaultCrypto.init(this)
-            ai.rightone.finderplus.media.VaultCrypto.exportRecovery(passphrase.toCharArray())
+            ai.dusty.finderplus.media.VaultCrypto.init(this)
+            ai.dusty.finderplus.media.VaultCrypto.exportRecovery(passphrase.toCharArray())
         }.getOrNull()
         if (blob == null) { toast("Couldn't create a recovery key"); return }
 
+        val name = normalizeKeyName(fileName)
         val saved = runCatching {
             val values = android.content.ContentValues().apply {
-                put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, "finderplus-recovery.key")
+                put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, name)
                 put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "application/octet-stream")
                 if (Build.VERSION.SDK_INT >= 29) {
                     put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
@@ -150,6 +154,7 @@ class PrivacyActivity : ComponentActivity() {
             uri
         }.getOrNull()
 
+        if (saved != null) vm.markKeySaved(saved)
         if (saved == null) {
             // Fallback: let the user choose a destination themselves.
             pendingExport = blob
@@ -157,29 +162,49 @@ class PrivacyActivity : ComponentActivity() {
                 Intent(Intent.ACTION_CREATE_DOCUMENT)
                     .addCategory(Intent.CATEGORY_OPENABLE)
                     .setType("application/octet-stream")
-                    .putExtra(Intent.EXTRA_TITLE, "finderplus-recovery.key")
+                    .putExtra(Intent.EXTRA_TITLE, name)
             )
             return
         }
 
-        toast("Saved to Downloads as finderplus-recovery.key")
-        runCatching {
-            startActivity(
-                Intent.createChooser(
-                    Intent(Intent.ACTION_SEND)
-                        .setType("application/octet-stream")
-                        .putExtra(Intent.EXTRA_STREAM, saved)
-                        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
-                    "Keep a copy off this phone",
-                )
-            )
-        }
+        toast("Saved to Downloads as $name — keep a copy off this phone")
+    }
+
+    private fun normalizeKeyName(fileName: String): String {
+        val trimmed = fileName.trim().ifEmpty { "finderplus-recovery.key" }
+        return if (trimmed.endsWith(".key", ignoreCase = true)) trimmed else "$trimmed.key"
     }
 
     private fun pickRecovery() {
         openLauncher.launch(
             Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("*/*")
         )
+    }
+
+    /** Re-save the key to a location the user picks (KeePassDX attachment folder, cloud, …). */
+    private fun saveKeyFile(fileName: String) {
+        val uri = vm.savedKeyUri.value ?: run { toast("Save a key first"); return }
+        val blob = runCatching { contentResolver.openInputStream(uri)?.use { it.readBytes() } }.getOrNull()
+        if (blob == null) { toast("Couldn't read the key"); return }
+        pendingExport = blob
+        saveLauncher.launch(
+            Intent(Intent.ACTION_CREATE_DOCUMENT)
+                .addCategory(Intent.CATEGORY_OPENABLE)
+                .setType("application/octet-stream")
+                .putExtra(Intent.EXTRA_TITLE, normalizeKeyName(fileName)),
+        )
+    }
+
+    /** Open the saved key file in whatever app handles it (file manager, KeePassDX, …). */
+    private fun openKeyFile() {
+        val uri = vm.savedKeyUri.value ?: run { toast("Save a key first"); return }
+        runCatching {
+            startActivity(
+                Intent(Intent.ACTION_VIEW)
+                    .setDataAndType(uri, "application/octet-stream")
+                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
+            )
+        }.onFailure { toast("No app can open the key file") }
     }
 
     private var pendingExport: ByteArray? = null
@@ -195,6 +220,7 @@ class PrivacyActivity : ComponentActivity() {
             contentResolver.openOutputStream(uri)?.use { it.write(blob) } != null
         }.getOrDefault(false)
         toast(if (ok) "Recovery key saved — keep it somewhere safe" else "Couldn't save the key")
+        if (ok) vm.markKeySaved(uri)
     }
 
     private val openLauncher = registerForActivityResult(
@@ -225,7 +251,22 @@ class PrivacyViewModel @Inject constructor(
     private val _busy = MutableStateFlow(false)
     val busy: StateFlow<Boolean> = _busy
 
+    private val _keySaved = MutableStateFlow(
+        ai.dusty.finderplus.media.VaultCrypto.isRecoveryKeySaved(context)
+    )
+    val keySaved: StateFlow<Boolean> = _keySaved
+
     var pendingImport: ByteArray? = null
+
+    /** MediaStore URI of the last recovery-key file saved this session, for re-sharing. */
+    private val _savedKeyUri = MutableStateFlow<Uri?>(null)
+    val savedKeyUri: StateFlow<Uri?> = _savedKeyUri
+
+    fun markKeySaved(uri: Uri? = null) {
+        if (uri != null) _savedKeyUri.value = uri
+        ai.dusty.finderplus.media.VaultCrypto.markRecoveryKeySaved(context)
+        _keySaved.value = true
+    }
 
     fun hasAllFiles(): Boolean =
         Build.VERSION.SDK_INT < 30 || Environment.isExternalStorageManager()
@@ -237,7 +278,11 @@ class PrivacyViewModel @Inject constructor(
         }
     }
 
-    fun setAuto(on: Boolean) { policy.auto = on; _auto.value = on }
+    fun setAuto(on: Boolean) {
+        if (on && !ai.dusty.finderplus.media.VaultCrypto.isRecoveryKeySaved(context)) return
+        policy.auto = on
+        _auto.value = on
+    }
 
     fun toggleFolder(folder: VaultEngine.Folder) {
         val next = if (folder.decision == VaultPolicy.Decision.HIDE) VaultPolicy.Decision.KEEP
@@ -248,6 +293,7 @@ class PrivacyViewModel @Inject constructor(
 
     /** Apply the current rules now: hide what should be hidden. */
     fun applyNow() {
+        if (!ai.dusty.finderplus.media.VaultCrypto.isRecoveryKeySaved(context)) return
         _busy.value = true
         VaultWorker.enqueue(context)
         viewModelScope.launch { kotlinx.coroutines.delay(1500); _busy.value = false; refresh() }
@@ -273,17 +319,20 @@ class PrivacyViewModel @Inject constructor(
     /** Any existing blob, used to prove an imported key actually opens this vault. */
     private fun sampleBlob(): java.io.File? = runCatching {
         engine.vaultRoot(context).walkTopDown()
-            .firstOrNull { it.isFile && it.name.endsWith(ai.rightone.finderplus.media.VaultCrypto.EXT) }
+            .firstOrNull { it.isFile && it.name.endsWith(ai.dusty.finderplus.media.VaultCrypto.EXT) }
     }.getOrNull()
 
-    fun importRecovery(passphrase: String): ai.rightone.finderplus.media.VaultCrypto.ImportResult {
+    fun importRecovery(passphrase: String): ai.dusty.finderplus.media.VaultCrypto.ImportResult {
         val blob = pendingImport
-            ?: return ai.rightone.finderplus.media.VaultCrypto.ImportResult.NOT_A_KEY_FILE
-        ai.rightone.finderplus.media.VaultCrypto.init(context)
-        val result = ai.rightone.finderplus.media.VaultCrypto.importRecovery(
+            ?: return ai.dusty.finderplus.media.VaultCrypto.ImportResult.NOT_A_KEY_FILE
+        ai.dusty.finderplus.media.VaultCrypto.init(context)
+        val result = ai.dusty.finderplus.media.VaultCrypto.importRecovery(
             blob, passphrase.toCharArray(), sampleBlob(),
         )
-        if (result == ai.rightone.finderplus.media.VaultCrypto.ImportResult.OK) pendingImport = null
+        if (result == ai.dusty.finderplus.media.VaultCrypto.ImportResult.OK) {
+            pendingImport = null
+            markKeySaved()
+        }
         return result
     }
 
@@ -310,18 +359,21 @@ class PrivacyViewModel @Inject constructor(
 private fun PrivacyScreen(
     vm: PrivacyViewModel,
     onGrantAccess: () -> Unit,
-    onExportKey: (String) -> Unit,
+    onExportKey: (String, String) -> Unit,
     onImportKey: () -> Unit,
+    onSaveKeyFile: (String) -> Unit,
+    onOpenKeyFile: () -> Unit,
     onClose: () -> Unit,
 ) {
     val folders by vm.folders.collectAsState()
     val auto by vm.auto.collectAsState()
     val busy by vm.busy.collectAsState()
+    val keySaved by vm.keySaved.collectAsState()
     val hidden = folders.sumOf { it.hiddenCount }
     val marked = folders.count { it.decision == VaultPolicy.Decision.HIDE }
 
     Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surface) {
-        LazyColumn(Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
+        LazyColumn(Modifier.fillMaxSize().statusBarsPadding().padding(horizontal = 16.dp)) {
             item {
                 Row(Modifier.fillMaxWidth().padding(top = 20.dp, bottom = 4.dp), verticalAlignment = Alignment.CenterVertically) {
                     Text("Private folders", style = MaterialTheme.typography.titleMedium)
@@ -354,6 +406,20 @@ private fun PrivacyScreen(
                 }
             }
 
+            item { SectionRule("recovery key") }
+            item {
+                if (!keySaved) {
+                    Notice(
+                        title = "Save a recovery key first",
+                        body = "Hidden files are encrypted. Without a saved key, uninstalling the app " +
+                            "destroys them forever. Save the key below before you mark anything private.",
+                        action = "Save below",
+                        onAction = {},
+                    )
+                }
+            }
+            item { RecoverySection(vm, hidden, onExportKey, onImportKey, onSaveKeyFile, onOpenKeyFile) }
+
             item { SectionRule("status") }
             item {
                 Mono("$hidden hidden and encrypted · $marked folder${if (marked == 1) "" else "s"} marked private")
@@ -366,7 +432,7 @@ private fun PrivacyScreen(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
-                    Switch(checked = auto, onCheckedChange = vm::setAuto)
+                    Switch(checked = auto && keySaved, enabled = keySaved, onCheckedChange = vm::setAuto)
                 }
             }
 
@@ -378,7 +444,7 @@ private fun PrivacyScreen(
             item { SectionRule("actions") }
             item {
                 Row(Modifier.fillMaxWidth().padding(top = 4.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Action("Apply now", primary = true, enabled = !busy && marked > 0) { vm.applyNow() }
+                    Action("Apply now", primary = true, enabled = !busy && marked > 0 && keySaved) { vm.applyNow() }
                     Action("Restore all", primary = false, enabled = !busy && hidden > 0) { vm.restoreAll() }
                 }
                 Text(
@@ -390,8 +456,6 @@ private fun PrivacyScreen(
                 )
             }
 
-            item { SectionRule("recovery key") }
-            item { RecoverySection(vm, hidden, onExportKey, onImportKey) }
             item { Spacer(Modifier.height(28.dp)) }
         }
     }
@@ -406,11 +470,15 @@ private fun PrivacyScreen(
 private fun RecoverySection(
     vm: PrivacyViewModel,
     hiddenCount: Int,
-    onExport: (String) -> Unit,
+    onExport: (String, String) -> Unit,
     onImport: () -> Unit,
+    onSaveKeyFile: (String) -> Unit,
+    onOpenKeyFile: () -> Unit,
 ) {
     var pass by remember { mutableStateOf("") }
+    var fileName by remember { mutableStateOf("") }
     var msg by remember { mutableStateOf<String?>(null) }
+    val savedKeyUri by vm.savedKeyUri.collectAsState()
     val clipboard = androidx.compose.ui.platform.LocalClipboardManager.current
 
     Column {
@@ -425,6 +493,7 @@ private fun RecoverySection(
         )
 
         Field(pass, { pass = it }, "passphrase")
+        Field(fileName, { fileName = it }, "key file name (e.g. finderplus-recovery)")
 
         Row(Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             // One tap to a strong passphrase: inventing one is where recovery keys actually fail.
@@ -441,18 +510,33 @@ private fun RecoverySection(
         }
 
         Row(Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Action("Save key", primary = true, enabled = pass.length >= 6) { onExport(pass) }
+            Action("Save key", primary = true, enabled = true) {
+                if (pass.length < 6) {
+                    msg = "Enter a passphrase first (6+ characters) or tap Suggest"
+                } else if (fileName.isBlank()) {
+                    msg = "Enter a file name for the key"
+                } else {
+                    onExport(pass, fileName)
+                }
+            }
             Action("Load key file", primary = false, enabled = true) { onImport() }
             if (vm.pendingImport != null) {
                 Action("Use key", primary = true, enabled = pass.isNotEmpty()) {
                     msg = when (vm.importRecovery(pass)) {
-                        ai.rightone.finderplus.media.VaultCrypto.ImportResult.OK -> "Key restored"
-                        ai.rightone.finderplus.media.VaultCrypto.ImportResult.WRONG_PASSPHRASE -> "Wrong passphrase"
-                        ai.rightone.finderplus.media.VaultCrypto.ImportResult.NOT_A_KEY_FILE -> "That is not a recovery key"
-                        ai.rightone.finderplus.media.VaultCrypto.ImportResult.WOULD_ORPHAN_EXISTING ->
+                        ai.dusty.finderplus.media.VaultCrypto.ImportResult.OK -> "Key restored"
+                        ai.dusty.finderplus.media.VaultCrypto.ImportResult.WRONG_PASSPHRASE -> "Wrong passphrase"
+                        ai.dusty.finderplus.media.VaultCrypto.ImportResult.NOT_A_KEY_FILE -> "That is not a recovery key"
+                        ai.dusty.finderplus.media.VaultCrypto.ImportResult.WOULD_ORPHAN_EXISTING ->
                             "Refused: that key cannot open the files already hidden here. Restore them first."
                     }
                 }
+            }
+        }
+
+        if (savedKeyUri != null) {
+            Row(Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Action("Save key file…", primary = false, enabled = true) { onSaveKeyFile(fileName) }
+                Action("Open key file", primary = false, enabled = true) { onOpenKeyFile() }
             }
         }
         msg?.let {

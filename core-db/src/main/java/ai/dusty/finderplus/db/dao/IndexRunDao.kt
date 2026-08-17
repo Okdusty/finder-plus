@@ -1,9 +1,9 @@
-package ai.rightone.finderplus.db.dao
+package ai.dusty.finderplus.db.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import ai.rightone.finderplus.db.entity.IndexRunEntity
+import ai.dusty.finderplus.db.entity.IndexRunEntity
 
 @Dao
 interface IndexRunDao {

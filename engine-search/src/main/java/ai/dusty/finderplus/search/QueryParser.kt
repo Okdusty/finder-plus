@@ -1,7 +1,7 @@
-package ai.rightone.finderplus.search
+package ai.dusty.finderplus.search
 
-import ai.rightone.finderplus.model.MediaKind
-import ai.rightone.finderplus.model.SearchQuery
+import ai.dusty.finderplus.model.MediaKind
+import ai.dusty.finderplus.model.SearchQuery
 
 interface QueryParser {
     fun parse(raw: String): SearchQuery

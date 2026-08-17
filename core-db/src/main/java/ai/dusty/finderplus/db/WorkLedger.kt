@@ -1,7 +1,7 @@
-package ai.rightone.finderplus.db
+package ai.dusty.finderplus.db
 
-import ai.rightone.finderplus.db.dao.WorkUnitDao
-import ai.rightone.finderplus.db.entity.WorkUnitEntity
+import ai.dusty.finderplus.db.dao.WorkUnitDao
+import ai.dusty.finderplus.db.entity.WorkUnitEntity
 
 /**
  * Thin, correctness-focused wrapper over [WorkUnitDao] that implements the two operations the raw

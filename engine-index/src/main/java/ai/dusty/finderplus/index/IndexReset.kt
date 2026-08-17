@@ -1,8 +1,8 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
-import ai.rightone.finderplus.db.FinderDatabase
-import ai.rightone.finderplus.db.entity.TagEntity
-import ai.rightone.finderplus.model.TagSource
+import ai.dusty.finderplus.db.FinderDatabase
+import ai.dusty.finderplus.db.entity.TagEntity
+import ai.dusty.finderplus.model.TagSource
 import javax.inject.Inject
 import javax.inject.Singleton
 

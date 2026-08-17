@@ -1,23 +1,23 @@
-package ai.rightone.finderplus.index.pass
+package ai.dusty.finderplus.index.pass
 
 import android.content.Context
-import ai.rightone.finderplus.db.dao.ContentDao
-import ai.rightone.finderplus.index.DecodedImageCache
-import ai.rightone.finderplus.index.ModelCoordinator
-import ai.rightone.finderplus.index.work.Checkpoint
-import ai.rightone.finderplus.media.FrameExtractor
-import ai.rightone.finderplus.model.MediaItem
-import ai.rightone.finderplus.model.MediaKind
-import ai.rightone.finderplus.model.Pass
-import ai.rightone.finderplus.model.RequiredModel
-import ai.rightone.finderplus.model.Segment
-import ai.rightone.finderplus.model.Tag
-import ai.rightone.finderplus.model.TagSource
-import ai.rightone.finderplus.speech.SpeechRecognizer
-import ai.rightone.finderplus.speech.TranscribeCursor
-import ai.rightone.finderplus.text.TextEmbedder
-import ai.rightone.finderplus.vision.ImageAnalyzer
-import ai.rightone.finderplus.db.entity.WorkUnitEntity
+import ai.dusty.finderplus.db.dao.ContentDao
+import ai.dusty.finderplus.index.DecodedImageCache
+import ai.dusty.finderplus.index.ModelCoordinator
+import ai.dusty.finderplus.index.work.Checkpoint
+import ai.dusty.finderplus.media.FrameExtractor
+import ai.dusty.finderplus.model.MediaItem
+import ai.dusty.finderplus.model.MediaKind
+import ai.dusty.finderplus.model.Pass
+import ai.dusty.finderplus.model.RequiredModel
+import ai.dusty.finderplus.model.Segment
+import ai.dusty.finderplus.model.Tag
+import ai.dusty.finderplus.model.TagSource
+import ai.dusty.finderplus.speech.SpeechRecognizer
+import ai.dusty.finderplus.speech.TranscribeCursor
+import ai.dusty.finderplus.text.TextEmbedder
+import ai.dusty.finderplus.vision.ImageAnalyzer
+import ai.dusty.finderplus.db.entity.WorkUnitEntity
 
 private const val MAX_IMAGE_EDGE = 1024
 
@@ -84,13 +84,13 @@ class OcrPassHandler(private val images: DecodedImageCache, private val analyzer
 class ObjectsPassHandler(
     private val context: Context,
     private val images: DecodedImageCache,
-    private val detector: ai.rightone.finderplus.vision.ObjectDetector,
+    private val detector: ai.dusty.finderplus.vision.ObjectDetector,
 ) : PassHandler {
     override val pass = Pass.OBJECTS
     override suspend fun process(item: MediaItem, unit: WorkUnitEntity, checkpoint: Checkpoint, ctx: PassContext): PassOutcome {
         if (!detector.isReady()) return PassOutcome.SKIPPED
         val video = item.kind == MediaKind.VIDEO
-        val bmp = (if (video) ai.rightone.finderplus.index.MediaThumbs.load(context, item.uri, MAX_IMAGE_EDGE)
+        val bmp = (if (video) ai.dusty.finderplus.index.MediaThumbs.load(context, item.uri, MAX_IMAGE_EDGE)
                    else images.get(item.uri, MAX_IMAGE_EDGE)) ?: return PassOutcome.COMPLETED
         if (!analyzable(bmp)) { if (video) bmp.recycle(); return PassOutcome.SKIPPED }
         val tags = detector.detect(bmp).map { it.copy(itemId = item.id) }
@@ -113,9 +113,9 @@ class ObjectsPassHandler(
 class CaptionPassHandler(
     private val context: Context,
     private val images: DecodedImageCache,
-    private val captioner: ai.rightone.finderplus.speech.VlmCaptioner,
+    private val captioner: ai.dusty.finderplus.speech.VlmCaptioner,
     private val coordinator: ModelCoordinator,
-    private val budget: ai.rightone.finderplus.index.CaptionBudget,
+    private val budget: ai.dusty.finderplus.index.CaptionBudget,
     private val remainingCaptions: suspend () -> Int,
 ) : PassHandler {
     override val pass = Pass.CAPTION
@@ -124,7 +124,7 @@ class CaptionPassHandler(
         if (!budget.shouldContinue(remainingCaptions())) return PassOutcome.SKIPPED
 
         val video = item.kind == MediaKind.VIDEO
-        val bmp = (if (video) ai.rightone.finderplus.index.MediaThumbs.load(context, item.uri, MAX_IMAGE_EDGE)
+        val bmp = (if (video) ai.dusty.finderplus.index.MediaThumbs.load(context, item.uri, MAX_IMAGE_EDGE)
                    else images.get(item.uri, MAX_IMAGE_EDGE)) ?: return PassOutcome.COMPLETED
         if (!analyzable(bmp)) { if (video) bmp.recycle(); return PassOutcome.SKIPPED }
 
@@ -148,7 +148,7 @@ class CaptionPassHandler(
  */
 class FacesPassHandler(
     private val images: DecodedImageCache,
-    private val faces: ai.rightone.finderplus.vision.FaceAnalyzer,
+    private val faces: ai.dusty.finderplus.vision.FaceAnalyzer,
 ) : PassHandler {
     override val pass = Pass.FACES
     override suspend fun process(item: MediaItem, unit: WorkUnitEntity, checkpoint: Checkpoint, ctx: PassContext): PassOutcome {
@@ -338,7 +338,7 @@ class TextEmbedPassHandler(
  * run, where concepts are reachable only after the vocabulary has been seeded.
  */
 class ConceptsPassHandler(
-    private val classifier: ai.rightone.finderplus.index.ConceptClassifier,
+    private val classifier: ai.dusty.finderplus.index.ConceptClassifier,
 ) : PassHandler {
     override val pass = Pass.CONCEPTS
 
@@ -374,14 +374,14 @@ class ConceptsPassHandler(
         val tags = concepts.mapNotNull {
             val source = when {
                 // A label backed by the user's own exemplars is trusted at its own (image-space) scale.
-                it.taught -> ai.rightone.finderplus.model.TagSource.LEARNED
+                it.taught -> ai.dusty.finderplus.model.TagSource.LEARNED
                 // A *name* is never asserted, only proposed. Identity and brand guesses were documented
                 // from the start as suggestion-grade ("confusing one person for another is the one
                 // output a user would call broken"), yet the band let a confident one auto-apply.
                 it.isEntity ->
-                    ai.rightone.finderplus.model.TagSource.SUGGESTED
-                it.score >= AUTO_APPLY_CONFIDENCE -> ai.rightone.finderplus.model.TagSource.CONCEPT
-                it.score >= REVIEW_CONFIDENCE -> ai.rightone.finderplus.model.TagSource.SUGGESTED
+                    ai.dusty.finderplus.model.TagSource.SUGGESTED
+                it.score >= AUTO_APPLY_CONFIDENCE -> ai.dusty.finderplus.model.TagSource.CONCEPT
+                it.score >= REVIEW_CONFIDENCE -> ai.dusty.finderplus.model.TagSource.SUGGESTED
                 else -> return@mapNotNull null
             }
             Tag(itemId = item.id, source = source, label = it.label, confidence = it.score)

@@ -1,12 +1,12 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import androidx.room.withTransaction
-import ai.rightone.finderplus.db.FinderDatabase
-import ai.rightone.finderplus.media.IndexedSignature
-import ai.rightone.finderplus.media.MediaDiffer
-import ai.rightone.finderplus.media.MediaStoreReader
-import ai.rightone.finderplus.model.MediaKind
-import ai.rightone.finderplus.model.Pass
+import ai.dusty.finderplus.db.FinderDatabase
+import ai.dusty.finderplus.media.IndexedSignature
+import ai.dusty.finderplus.media.MediaDiffer
+import ai.dusty.finderplus.media.MediaStoreReader
+import ai.dusty.finderplus.model.MediaKind
+import ai.dusty.finderplus.model.Pass
 
 data class ScanSummary(
     val added: Int,

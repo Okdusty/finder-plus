@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.db
+package ai.dusty.finderplus.db
 
 /**
  * Integer codes persisted in the DB. These mirror the domain enums by ordinal; centralizing them
@@ -13,7 +13,7 @@ object WorkState {
     const val SKIPPED = 5
 }
 
-/** Mirrors [ai.rightone.finderplus.model.IndexState] ordinals. */
+/** Mirrors [ai.dusty.finderplus.model.IndexState] ordinals. */
 object ItemState {
     const val NEW = 0
     const val PARTIAL = 1
@@ -22,7 +22,7 @@ object ItemState {
     const val STALE = 4
 }
 
-/** Mirrors [ai.rightone.finderplus.model.RunStatus] ordinals. */
+/** Mirrors [ai.dusty.finderplus.model.RunStatus] ordinals. */
 object RunState {
     const val IDLE = 0
     const val SCANNING = 1

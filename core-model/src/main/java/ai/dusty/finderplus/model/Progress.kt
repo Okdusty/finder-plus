@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.model
+package ai.dusty.finderplus.model
 
 /** Lifecycle of an index run, surfaced on the widget and the foreground notification. */
 enum class RunStatus { IDLE, SCANNING, RUNNING, PAUSED, STOPPING, STOPPED, DONE, FAILED }

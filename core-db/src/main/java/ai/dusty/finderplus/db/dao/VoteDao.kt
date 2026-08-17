@@ -1,10 +1,10 @@
-package ai.rightone.finderplus.db.dao
+package ai.dusty.finderplus.db.dao
 
 import androidx.room.Dao
 import androidx.room.Query
 
 /**
- * Implicit relevance feedback. See [ai.rightone.finderplus.db.entity.SearchVoteEntity].
+ * Implicit relevance feedback. See [ai.dusty.finderplus.db.entity.SearchVoteEntity].
  *
  * **Only the user votes.** The sole legitimate writer is the search UI relaying a human gesture
  * (copy / open / preview / passed-over). No indexing pass, no judge, no AI process may ever write

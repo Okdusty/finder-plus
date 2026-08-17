@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "ai.rightone.finderplus.db"
+    namespace = "ai.dusty.finderplus.db"
     compileSdk = 35
     buildToolsVersion = "36.0.0"
 

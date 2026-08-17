@@ -1,6 +1,6 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
-import ai.rightone.finderplus.model.RequiredModel
+import ai.dusty.finderplus.model.RequiredModel
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 

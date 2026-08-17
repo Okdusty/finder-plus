@@ -1,10 +1,10 @@
-package ai.rightone.finderplus.speech
+package ai.dusty.finderplus.speech
 
-import ai.rightone.finderplus.model.Accelerator
-import ai.rightone.finderplus.model.DownloadProgress
-import ai.rightone.finderplus.model.ModelCatalog
-import ai.rightone.finderplus.model.ModelRole
-import ai.rightone.finderplus.model.ModelSpec
+import ai.dusty.finderplus.model.Accelerator
+import ai.dusty.finderplus.model.DownloadProgress
+import ai.dusty.finderplus.model.ModelCatalog
+import ai.dusty.finderplus.model.ModelRole
+import ai.dusty.finderplus.model.ModelSpec
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

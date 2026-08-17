@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext

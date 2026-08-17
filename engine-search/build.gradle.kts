@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "ai.rightone.finderplus.search"
+    namespace = "ai.dusty.finderplus.search"
     compileSdk = 35
     buildToolsVersion = "36.0.0"
     defaultConfig { minSdk = 26 }

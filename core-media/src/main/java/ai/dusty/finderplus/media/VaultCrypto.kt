@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.media
+package ai.dusty.finderplus.media
 
 import android.content.Context
 import android.media.MediaDataSource
@@ -49,6 +49,17 @@ object VaultCrypto {
     private const val KEY_FILE = "vault.key"
     private val RECOVERY_MAGIC = byteArrayOf(0x46, 0x50, 0x52, 0x31) // "FPR1"
     private const val PBKDF2_ROUNDS = 210_000
+    private const val PREFS = "vault"
+    private const val PREF_RECOVERY_SAVED = "recovery_key_saved"
+
+    fun isRecoveryKeySaved(context: Context): Boolean =
+        context.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .getBoolean(PREF_RECOVERY_SAVED, false)
+
+    fun markRecoveryKeySaved(context: Context) {
+        context.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .edit().putBoolean(PREF_RECOVERY_SAVED, true).apply()
+    }
 
     fun isVaultFile(path: String?): Boolean = path?.endsWith(EXT) == true
 

@@ -1,20 +1,20 @@
-package ai.rightone.finderplus.search
+package ai.dusty.finderplus.search
 
-import ai.rightone.finderplus.db.dao.ContentDao
-import ai.rightone.finderplus.db.dao.FtsDao
-import ai.rightone.finderplus.db.dao.MediaItemDao
-import ai.rightone.finderplus.db.dao.MediaProfileDao
-import ai.rightone.finderplus.db.toMediaItem
-import ai.rightone.finderplus.model.DocSource
-import ai.rightone.finderplus.db.vector.VectorStore
-import ai.rightone.finderplus.db.vector.Vecs
-import ai.rightone.finderplus.model.EmbeddingKind
-import ai.rightone.finderplus.model.MediaKind
-import ai.rightone.finderplus.model.SearchHit
-import ai.rightone.finderplus.model.SearchQuery
-import ai.rightone.finderplus.model.SearchResult
-import ai.rightone.finderplus.vision.ClipTextEncoder
-import ai.rightone.finderplus.text.TextEmbedder
+import ai.dusty.finderplus.db.dao.ContentDao
+import ai.dusty.finderplus.db.dao.FtsDao
+import ai.dusty.finderplus.db.dao.MediaItemDao
+import ai.dusty.finderplus.db.dao.MediaProfileDao
+import ai.dusty.finderplus.db.toMediaItem
+import ai.dusty.finderplus.model.DocSource
+import ai.dusty.finderplus.db.vector.VectorStore
+import ai.dusty.finderplus.db.vector.Vecs
+import ai.dusty.finderplus.model.EmbeddingKind
+import ai.dusty.finderplus.model.MediaKind
+import ai.dusty.finderplus.model.SearchHit
+import ai.dusty.finderplus.model.SearchQuery
+import ai.dusty.finderplus.model.SearchResult
+import ai.dusty.finderplus.vision.ClipTextEncoder
+import ai.dusty.finderplus.text.TextEmbedder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -44,7 +44,7 @@ class DefaultSearchEngine(
     private val parser: QueryParser = DefaultQueryParser(),
     private val fuser: RankFuser = DefaultRankFuser(),
     private val speller: QuerySpeller? = null,
-    private val voteDao: ai.rightone.finderplus.db.dao.VoteDao? = null,
+    private val voteDao: ai.dusty.finderplus.db.dao.VoteDao? = null,
 ) : SearchEngine {
 
     @Volatile

@@ -1,11 +1,11 @@
-package ai.rightone.finderplus.db.dao
+package ai.dusty.finderplus.db.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import ai.rightone.finderplus.db.entity.FaceEntity
-import ai.rightone.finderplus.db.entity.PersonEntity
+import ai.dusty.finderplus.db.entity.FaceEntity
+import ai.dusty.finderplus.db.entity.PersonEntity
 
 @Dao
 interface FaceDao {

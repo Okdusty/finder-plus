@@ -1,7 +1,7 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
-import ai.rightone.finderplus.model.MediaKind
-import ai.rightone.finderplus.model.Pass
+import ai.dusty.finderplus.model.MediaKind
+import ai.dusty.finderplus.model.Pass
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
@@ -91,6 +91,6 @@ class FrameAggregationTest {
      * keyframe embeddings are already on disk, so this is arithmetic rather than a re-index.
      */
     @Test fun labellingVideoCostsNoModelWork() {
-        assertThat(Pass.CONCEPTS.model).isEqualTo(ai.rightone.finderplus.model.RequiredModel.NONE)
+        assertThat(Pass.CONCEPTS.model).isEqualTo(ai.dusty.finderplus.model.RequiredModel.NONE)
     }
 }

@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import android.content.ContentUris
 import android.content.Context
@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
 import kotlinx.coroutines.suspendCancellableCoroutine
-import ai.rightone.finderplus.db.FinderDatabase
+import ai.dusty.finderplus.db.FinderDatabase
 
 /**
  * The vault: every photo and video that did not come out of the camera is moved out of the world the
@@ -170,8 +170,12 @@ class VaultEngine @Inject constructor(
         val (kept, all) = candidates(context, only)
         val byBucket = all.groupingBy { it.relPath.trimEnd('/').ifEmpty { "(root)" } }.eachCount()
         if (dryRun) return Report(kept, all.size, 0, byBucket, dryRun = true)
+        if (!ai.dusty.finderplus.media.VaultCrypto.isRecoveryKeySaved(context)) {
+            android.util.Log.e("finderVault", "REFUSED hide: recovery key not saved")
+            return Report(kept, 0, all.size, byBucket, dryRun = false)
+        }
 
-        ai.rightone.finderplus.media.VaultCrypto.init(context)
+        ai.dusty.finderplus.media.VaultCrypto.init(context)
         val root = vaultRoot(context)
         root.mkdirs()
 
@@ -180,12 +184,12 @@ class VaultEngine @Inject constructor(
         for ((i, cand) in all.withIndex()) {
             val src = File(cand.path)
             if (!src.exists()) { failed++; continue }
-            val dest = File(root, cand.relPath + src.name + ai.rightone.finderplus.media.VaultCrypto.EXT).let(::dedupe)
+            val dest = File(root, cand.relPath + src.name + ai.dusty.finderplus.media.VaultCrypto.EXT).let(::dedupe)
             dest.parentFile?.mkdirs()
 
             // Encrypt first, verify, and only then remove the plaintext — an interrupted run can
             // leave a spare ciphertext (harmless, overwritten next time) but never a lost file.
-            if (!ai.rightone.finderplus.media.VaultCrypto.encryptInto(src, dest)) { failed++; continue }
+            if (!ai.dusty.finderplus.media.VaultCrypto.encryptInto(src, dest)) { failed++; continue }
             if (!src.delete()) { dest.delete(); failed++; continue }
 
             // The DB row may not exist (file never indexed) — the move still hides it; the next scan
@@ -212,17 +216,17 @@ class VaultEngine @Inject constructor(
         val rows = db.mediaItemDao().vaulted()
         var moved = 0; var failed = 0
         for ((i, row) in rows.withIndex()) {
-            ai.rightone.finderplus.media.VaultCrypto.init(context)
+            ai.dusty.finderplus.media.VaultCrypto.init(context)
             val src = File(Uri.parse(row.content_uri).path ?: continue)
             val destPath = row.original_path ?: continue
             val dest = File(destPath)
             dest.parentFile?.mkdirs()
             if (!src.exists()) { failed++; continue }
             val restored = runCatching {
-                ai.rightone.finderplus.media.VaultCrypto.openDecrypting(src).use { input ->
+                ai.dusty.finderplus.media.VaultCrypto.openDecrypting(src).use { input ->
                     dest.outputStream().use { out -> input.copyTo(out, 1 shl 16) }
                 }
-                dest.length() == ai.rightone.finderplus.media.VaultCrypto.plaintextSize(src)
+                dest.length() == ai.dusty.finderplus.media.VaultCrypto.plaintextSize(src)
             }.getOrDefault(false)
             if (!restored) { dest.delete(); failed++; continue }
             src.delete()
@@ -267,9 +271,9 @@ class VaultEngine @Inject constructor(
      * been rewritten, because that is the point of no return.
      */
     suspend fun rotateKey(context: Context, onProgress: (Int, Int) -> Unit = { _, _ -> }): Report {
-        ai.rightone.finderplus.media.VaultCrypto.init(context)
+        ai.dusty.finderplus.media.VaultCrypto.init(context)
         val rows = db.mediaItemDao().vaulted()
-        val oldKey = ai.rightone.finderplus.media.VaultCrypto.currentKeyBytes()
+        val oldKey = ai.dusty.finderplus.media.VaultCrypto.currentKeyBytes()
         val newKey = ByteArray(32).also { java.security.SecureRandom().nextBytes(it) }
 
         var done = 0; var failed = 0; var absent = 0
@@ -281,7 +285,7 @@ class VaultEngine @Inject constructor(
             // would abort every attempt forever, which is the wrong thing to be strict about.
             if (!blob.exists()) { absent++; continue }
             val tmp = File(blob.parentFile, blob.name + ".rotating")
-            val ok = ai.rightone.finderplus.media.VaultCrypto.reEncrypt(blob, tmp, oldKey, newKey)
+            val ok = ai.dusty.finderplus.media.VaultCrypto.reEncrypt(blob, tmp, oldKey, newKey)
             if (!ok) { tmp.delete(); failed++; continue }
             staged += tmp to blob
             done++
@@ -297,7 +301,7 @@ class VaultEngine @Inject constructor(
         }
 
         staged.forEach { (tmp, final) -> tmp.renameTo(final) }
-        ai.rightone.finderplus.media.VaultCrypto.installKey(newKey)
+        ai.dusty.finderplus.media.VaultCrypto.installKey(newKey)
         android.util.Log.i("finderVault", "rotated vault key across $done files ($absent rows had no blob)")
         return Report(absent, done, 0, emptyMap(), dryRun = false)
     }
@@ -308,7 +312,7 @@ class VaultEngine @Inject constructor(
      */
     fun expectedBlobFor(context: Context, originalPath: String): File {
         val rel = originalPath.removePrefix("/storage/emulated/0/")
-        return File(vaultRoot(context), rel + ai.rightone.finderplus.media.VaultCrypto.EXT)
+        return File(vaultRoot(context), rel + ai.dusty.finderplus.media.VaultCrypto.EXT)
     }
 
     /** Same-name collision inside the vault gets a numeric suffix, never an overwrite. */

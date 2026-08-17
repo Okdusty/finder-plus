@@ -1,8 +1,8 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
-import ai.rightone.finderplus.model.MediaKind
-import ai.rightone.finderplus.model.Pass
-import ai.rightone.finderplus.model.RequiredModel
+import ai.dusty.finderplus.model.MediaKind
+import ai.dusty.finderplus.model.Pass
+import ai.dusty.finderplus.model.RequiredModel
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 

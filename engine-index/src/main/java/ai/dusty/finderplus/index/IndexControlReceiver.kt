@@ -1,10 +1,10 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import ai.rightone.finderplus.model.Trigger
+import ai.dusty.finderplus.model.Trigger
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -61,8 +61,8 @@ class IndexControlReceiver : BroadcastReceiver() {
             // than assumed:
             //   adb shell am broadcast -a ...action.PROBE_BACKENDS -p <pkg>
             ACTION_PROBE_BACKENDS -> {
-                ai.rightone.finderplus.speech.SpeechBackends.setVerboseLogging(true)
-                val devices = ai.rightone.finderplus.speech.SpeechBackends.devices()
+                ai.dusty.finderplus.speech.SpeechBackends.setVerboseLogging(true)
+                val devices = ai.dusty.finderplus.speech.SpeechBackends.devices()
                 if (devices.isEmpty()) {
                     android.util.Log.i(TAG, "backends: none (native library unavailable)")
                 } else {
@@ -71,7 +71,7 @@ class IndexControlReceiver : BroadcastReceiver() {
                     }
                     android.util.Log.i(TAG, "backends: gpu=${devices.any { it.isGpu }}")
                 }
-                ai.rightone.finderplus.speech.SpeechBackends.vulkanCapabilities().takeIf { it.isNotEmpty() }?.let {
+                ai.dusty.finderplus.speech.SpeechBackends.vulkanCapabilities().takeIf { it.isNotEmpty() }?.let {
                     android.util.Log.i(TAG, "vulkan: $it")
                 }
             }

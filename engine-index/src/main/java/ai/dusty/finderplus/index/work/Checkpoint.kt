@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.index.work
+package ai.dusty.finderplus.index.work
 
 /**
  * The sub-item resume cursor persisted in work_unit.checkpoint. Encoded as a compact pipe-delimited

@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.speech
+package ai.dusty.finderplus.speech
 
 import ai.onnxruntime.OnnxTensor
 import ai.onnxruntime.OrtEnvironment

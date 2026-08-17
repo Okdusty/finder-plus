@@ -6,8 +6,8 @@
         android:shortcutShortLabel="@string/shortcut_search">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="ai.rightone.finderplus"
-            android:targetClass="ai.rightone.finderplus.ui.popup.SearchPopupActivity" />
+            android:targetPackage="ai.dusty.finderplus"
+            android:targetClass="ai.dusty.finderplus.ui.popup.SearchPopupActivity" />
     </shortcut>
     <shortcut
         android:shortcutId="private"
@@ -16,7 +16,7 @@
         android:shortcutShortLabel="@string/shortcut_private">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="ai.rightone.finderplus"
-            android:targetClass="ai.rightone.finderplus.ui.settings.PrivacyActivity" />
+            android:targetPackage="ai.dusty.finderplus"
+            android:targetClass="ai.dusty.finderplus.ui.settings.PrivacyActivity" />
     </shortcut>
 </shortcuts>

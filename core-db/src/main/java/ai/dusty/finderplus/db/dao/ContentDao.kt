@@ -1,12 +1,12 @@
-package ai.rightone.finderplus.db.dao
+package ai.dusty.finderplus.db.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import ai.rightone.finderplus.db.entity.DocumentEntity
-import ai.rightone.finderplus.db.entity.SegmentEntity
-import ai.rightone.finderplus.db.entity.TagEntity
+import ai.dusty.finderplus.db.entity.DocumentEntity
+import ai.dusty.finderplus.db.entity.SegmentEntity
+import ai.dusty.finderplus.db.entity.TagEntity
 
 /**
  * Derived text/tag content. All writes are convergent: a pass first clears its own rows for the

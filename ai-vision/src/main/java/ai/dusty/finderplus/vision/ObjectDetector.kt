@@ -1,7 +1,7 @@
-package ai.rightone.finderplus.vision
+package ai.dusty.finderplus.vision
 
 import android.graphics.Bitmap
-import ai.rightone.finderplus.model.Tag
+import ai.dusty.finderplus.model.Tag
 
 /**
  * Multi-object detection. Complements whole-image labeling: a photo of a table gets one dominant

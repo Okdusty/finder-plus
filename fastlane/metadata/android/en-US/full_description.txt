@@ -1,0 +1,35 @@
+finder+ indexes your phone's gallery and makes it searchable by what is inside
+the files, not by their filenames. Every image, video and audio file is read
+once and turned into a block of text: image labels, OCR, YOLOX object classes,
+detected faces, a CLIP vector, and a speech transcript for anything with
+audio. Type "dog" and you get the photos with a dog in them, whether or not
+anything was ever tagged.
+
+There is no app screen to open. Search is a home-screen widget and a
+translucent pop-up over whatever you are doing. Tapping a result copies the
+media and its extracted text to the clipboard as a single clip.
+
+Fully open, on device
+---------------------
+Every model is open-licensed (MIT / Apache-2.0) and runs locally through ONNX
+Runtime or a vendored llama.cpp / whisper.cpp. There is no proprietary
+dependency and nothing is sent off the device. The only things bundled in the
+APK are two small data files — an OCR character dictionary and an open-set
+concept vocabulary — both plain, editable text. The app works in airplane
+mode, which is the check that makes the "nothing leaves the device" claim
+falsifiable.
+
+Optional models
+---------------
+Because nothing proprietary is bundled, the models are downloaded on demand
+(from Hugging Face and GitHub): MobileNetV2 image labels, PP-OCRv5 OCR, CLIP
+semantic search, YOLOX object detection, YuNet face detection, Qwen3-ASR /
+Whisper speech transcription, SmolVLM captions, and Silero VAD. The gallery
+inventory and metadata index work out of the box; installing a model turns on
+the matching pass.
+
+Notes
+-----
+- Requires Android 8.0 (API 26) or newer, arm64-v8a only.
+- "All files access" is used only by the encrypted private vault (moving files
+  out of MediaStore and serving them back), and is never requested casually.

@@ -1,9 +1,9 @@
-package ai.rightone.finderplus.speech
+package ai.dusty.finderplus.speech
 
-import ai.rightone.finderplus.media.PcmDecoder
-import ai.rightone.finderplus.model.Accelerator
-import ai.rightone.finderplus.model.MediaItem
-import ai.rightone.finderplus.model.Segment
+import ai.dusty.finderplus.media.PcmDecoder
+import ai.dusty.finderplus.model.Accelerator
+import ai.dusty.finderplus.model.MediaItem
+import ai.dusty.finderplus.model.Segment
 
 /**
  * Speech recognition via whisper.cpp — the fast engine.

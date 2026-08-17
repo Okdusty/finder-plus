@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.media
+package ai.dusty.finderplus.media
 
 import java.math.BigInteger
 import org.junit.Assert.assertArrayEquals

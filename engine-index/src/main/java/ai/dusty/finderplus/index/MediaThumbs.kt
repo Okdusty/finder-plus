@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -21,14 +21,14 @@ object MediaThumbs {
         // Vaulted media has no MediaStore row, so loadThumbnail cannot serve it — pull the frame
         // straight from the file instead.
         if (parsed.scheme == "file") {
-            ai.rightone.finderplus.media.VaultCrypto.init(context)
+            ai.dusty.finderplus.media.VaultCrypto.init(context)
             val f = java.io.File(parsed.path!!)
             val r = MediaMetadataRetriever()
             return@runCatching try {
                 // Encrypted blobs are served through a seeking decryptor, so a frame grab decrypts
                 // only the bytes it touches instead of the whole video.
-                if (ai.rightone.finderplus.media.VaultCrypto.isVaultFile(parsed.path)) {
-                    r.setDataSource(ai.rightone.finderplus.media.VaultCrypto.dataSource(f))
+                if (ai.dusty.finderplus.media.VaultCrypto.isVaultFile(parsed.path)) {
+                    r.setDataSource(ai.dusty.finderplus.media.VaultCrypto.dataSource(f))
                 } else r.setDataSource(parsed.path)
                 r.frameAtTime
             } finally {

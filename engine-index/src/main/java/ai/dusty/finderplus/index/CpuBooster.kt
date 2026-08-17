@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import java.io.File
 import javax.inject.Inject
@@ -58,7 +58,7 @@ class CpuBooster @Inject constructor() {
     fun ensureBoosted() {
         val cpuset = currentCpuset()
         if (pinnedCores > 0 && cpuset == pinnedUnder) return
-        pinnedCores = runCatching { ai.rightone.finderplus.speech.SpeechBackends.pinFastCores() }
+        pinnedCores = runCatching { ai.dusty.finderplus.speech.SpeechBackends.pinFastCores() }
             .getOrDefault(0)
         pinnedUnder = cpuset
         state = if (pinnedCores > 0) State.ACTIVE else State.UNAVAILABLE

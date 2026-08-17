@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.search
+package ai.dusty.finderplus.search
 
 /**
  * Reciprocal Rank Fusion across the search legs. RRF is scale-free, so it robustly combines FTS BM25

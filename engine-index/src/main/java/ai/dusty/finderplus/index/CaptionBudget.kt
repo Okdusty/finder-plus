@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import javax.inject.Inject
 import javax.inject.Singleton

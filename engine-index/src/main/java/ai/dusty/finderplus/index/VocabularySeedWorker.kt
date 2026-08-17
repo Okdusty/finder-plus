@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import android.app.Notification
 import android.content.Context
@@ -10,7 +10,7 @@ import androidx.work.ForegroundInfo
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import ai.rightone.finderplus.db.FinderDatabase
+import ai.dusty.finderplus.db.FinderDatabase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -95,7 +95,7 @@ class VocabularySeedWorker @AssistedInject constructor(
         // no error anywhere. Seeding is the prerequisite those units were waiting on, so the worker
         // that satisfies it is the right place to requeue them.
         val revived = db.workUnitDao().requeueSkipped(
-            ai.rightone.finderplus.model.Pass.CONCEPTS.ordinal, System.currentTimeMillis(),
+            ai.dusty.finderplus.model.Pass.CONCEPTS.ordinal, System.currentTimeMillis(),
         )
         if (revived > 0) {
             log("revived $revived skipped CONCEPTS units")

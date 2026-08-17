@@ -1,8 +1,8 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import android.content.Context
 import android.graphics.Bitmap
-import ai.rightone.finderplus.media.Bitmaps
+import ai.dusty.finderplus.media.Bitmaps
 
 /**
  * Single-entry decoded-bitmap cache. An item's cheap passes (IMAGE_LABEL then OCR) are claimed

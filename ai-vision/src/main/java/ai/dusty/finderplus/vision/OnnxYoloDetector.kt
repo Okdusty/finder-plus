@@ -1,11 +1,11 @@
-package ai.rightone.finderplus.vision
+package ai.dusty.finderplus.vision
 
 import ai.onnxruntime.OnnxTensor
 import ai.onnxruntime.OrtEnvironment
 import ai.onnxruntime.OrtSession
 import android.graphics.Bitmap
-import ai.rightone.finderplus.model.Tag
-import ai.rightone.finderplus.model.TagSource
+import ai.dusty.finderplus.model.Tag
+import ai.dusty.finderplus.model.TagSource
 import java.io.File
 import java.nio.FloatBuffer
 import kotlin.math.exp

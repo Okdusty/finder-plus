@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "ai.rightone.finderplus.media"
+    namespace = "ai.dusty.finderplus.media"
     compileSdk = 35
     buildToolsVersion = "36.0.0"
     defaultConfig { minSdk = 26 }

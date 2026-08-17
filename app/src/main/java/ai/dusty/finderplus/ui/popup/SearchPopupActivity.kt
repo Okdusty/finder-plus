@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.ui.popup
+package ai.dusty.finderplus.ui.popup
 
 import android.Manifest
 import android.content.Intent
@@ -83,14 +83,14 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlinx.coroutines.delay
-import ai.rightone.finderplus.index.IndexWorker
-import ai.rightone.finderplus.model.MediaKind
-import ai.rightone.finderplus.model.SearchResult
-import ai.rightone.finderplus.ui.ClipboardWriter
-import ai.rightone.finderplus.ui.contract.ResultGroup
-import ai.rightone.finderplus.ui.contract.PreviewUi
-import ai.rightone.finderplus.ui.contract.SearchEffect
-import ai.rightone.finderplus.ui.contract.SearchUiState
+import ai.dusty.finderplus.index.IndexWorker
+import ai.dusty.finderplus.model.MediaKind
+import ai.dusty.finderplus.model.SearchResult
+import ai.dusty.finderplus.ui.ClipboardWriter
+import ai.dusty.finderplus.ui.contract.ResultGroup
+import ai.dusty.finderplus.ui.contract.PreviewUi
+import ai.dusty.finderplus.ui.contract.SearchEffect
+import ai.dusty.finderplus.ui.contract.SearchUiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -214,7 +214,7 @@ class SearchPopupActivity : ComponentActivity() {
                                 onPrivate = {
                                     startActivity(
                                         Intent(this@SearchPopupActivity,
-                                            ai.rightone.finderplus.ui.settings.PrivacyActivity::class.java)
+                                            ai.dusty.finderplus.ui.settings.PrivacyActivity::class.java)
                                     )
                                 },
                             )
@@ -281,7 +281,7 @@ class SearchPopupActivity : ComponentActivity() {
         runCatching {
             // Vaulted media is encrypted and outside MediaStore: stage a decrypted copy and hand the
             // viewer a content:// URI it can actually read.
-            val shareable = ai.rightone.finderplus.ui.VaultAccess.shareableUri(this, uri, displayName)
+            val shareable = ai.dusty.finderplus.ui.VaultAccess.shareableUri(this, uri, displayName)
                 ?: throw IllegalStateException("cannot stage $uri")
             val intent = Intent(Intent.ACTION_VIEW).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             if (shareable.scheme == "content" && mime != null) intent.setDataAndType(shareable, mime)
@@ -564,7 +564,7 @@ private fun MediaPreview(
         value = withContext(Dispatchers.IO) {
             runCatching {
                 if (Build.VERSION.SDK_INT >= 29)
-                    ai.rightone.finderplus.ui.MediaImages.thumbnail(context, r.item.uri, 1080)
+                    ai.dusty.finderplus.ui.MediaImages.thumbnail(context, r.item.uri, 1080)
                 else null
             }.getOrNull()
         }
@@ -860,7 +860,7 @@ private fun Thumb(uri: String, kind: MediaKind) {
         value = withContext(Dispatchers.IO) {
             runCatching {
                 if (Build.VERSION.SDK_INT >= 29)
-                    ai.rightone.finderplus.ui.MediaImages.thumbnail(context, uri, 160)
+                    ai.dusty.finderplus.ui.MediaImages.thumbnail(context, uri, 160)
                 else null
             }.getOrNull()
         }

@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import android.app.Notification
 import android.content.Context
@@ -11,7 +11,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import ai.rightone.finderplus.model.Trigger
+import ai.dusty.finderplus.model.Trigger
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 

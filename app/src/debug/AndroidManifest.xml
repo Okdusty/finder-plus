@@ -13,7 +13,7 @@
 
     <application>
         <receiver
-            android:name="ai.rightone.finderplus.index.IndexControlReceiver"
+            android:name="ai.dusty.finderplus.index.IndexControlReceiver"
             android:exported="true"
             tools:replace="android:exported" />
     </application>

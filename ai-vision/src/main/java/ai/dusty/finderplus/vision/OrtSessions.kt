@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.vision
+package ai.dusty.finderplus.vision
 
 import ai.onnxruntime.OrtEnvironment
 import ai.onnxruntime.OrtSession

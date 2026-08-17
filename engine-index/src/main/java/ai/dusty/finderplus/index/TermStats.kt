@@ -1,8 +1,8 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import androidx.room.withTransaction
-import ai.rightone.finderplus.db.FinderDatabase
-import ai.rightone.finderplus.db.entity.TermDfEntity
+import ai.dusty.finderplus.db.FinderDatabase
+import ai.dusty.finderplus.db.entity.TermDfEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.ln

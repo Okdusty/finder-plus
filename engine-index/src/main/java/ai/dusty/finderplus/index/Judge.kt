@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import android.graphics.Bitmap
 import android.util.Base64
@@ -107,7 +107,7 @@ internal fun batchMaxTokens(labelCount: Int): Int = labelCount * 8 + 40
  * because it is the only option.
  */
 class LocalJudge(
-    private val captioner: ai.rightone.finderplus.speech.VlmCaptioner,
+    private val captioner: ai.dusty.finderplus.speech.VlmCaptioner,
 ) : Judge {
     override fun isReady(): Boolean = captioner.isReady()
     override fun name(): String = "local-qwen3.5-4b"

@@ -1,19 +1,19 @@
-package ai.rightone.finderplus.di
+package ai.dusty.finderplus.di
 
 import android.content.Context
-import ai.rightone.finderplus.db.FinderDatabase
-import ai.rightone.finderplus.db.WorkLedger
-import ai.rightone.finderplus.index.IndexEngine
-import ai.rightone.finderplus.index.IndexOrchestrator
-import ai.rightone.finderplus.index.IndexStatusListener
-import ai.rightone.finderplus.index.ConceptVocabulary
-import ai.rightone.finderplus.index.PowerPolicy
-import ai.rightone.finderplus.media.FrameExtractor
-import ai.rightone.finderplus.media.MediaStoreReader
-import ai.rightone.finderplus.model.ModelCatalog
-import ai.rightone.finderplus.speech.SpeechRecognizer
-import ai.rightone.finderplus.text.TextEmbedder
-import ai.rightone.finderplus.vision.ImageAnalyzer
+import ai.dusty.finderplus.db.FinderDatabase
+import ai.dusty.finderplus.db.WorkLedger
+import ai.dusty.finderplus.index.IndexEngine
+import ai.dusty.finderplus.index.IndexOrchestrator
+import ai.dusty.finderplus.index.IndexStatusListener
+import ai.dusty.finderplus.index.ConceptVocabulary
+import ai.dusty.finderplus.index.PowerPolicy
+import ai.dusty.finderplus.media.FrameExtractor
+import ai.dusty.finderplus.media.MediaStoreReader
+import ai.dusty.finderplus.model.ModelCatalog
+import ai.dusty.finderplus.speech.SpeechRecognizer
+import ai.dusty.finderplus.text.TextEmbedder
+import ai.dusty.finderplus.vision.ImageAnalyzer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,18 +52,18 @@ object EngineModule {
         reader: MediaStoreReader,
         frameExtractor: FrameExtractor,
         imageAnalyzer: ImageAnalyzer,
-        objectDetector: ai.rightone.finderplus.vision.ObjectDetector,
-        faceAnalyzer: ai.rightone.finderplus.vision.FaceAnalyzer,
+        objectDetector: ai.dusty.finderplus.vision.ObjectDetector,
+        faceAnalyzer: ai.dusty.finderplus.vision.FaceAnalyzer,
         speechRecognizer: SpeechRecognizer,
         textEmbedder: TextEmbedder,
         workLedger: WorkLedger,
-        conceptClassifier: ai.rightone.finderplus.index.ConceptClassifier,
-        cpuBooster: ai.rightone.finderplus.index.CpuBooster,
-        coordinator: ai.rightone.finderplus.index.ModelCoordinator,
-        perfPrefs: ai.rightone.finderplus.index.PerfPrefs,
-        vlmCaptioner: ai.rightone.finderplus.speech.VlmCaptioner,
-        captionBudget: ai.rightone.finderplus.index.CaptionBudget,
-        vaultPolicy: ai.rightone.finderplus.index.VaultPolicy,
+        conceptClassifier: ai.dusty.finderplus.index.ConceptClassifier,
+        cpuBooster: ai.dusty.finderplus.index.CpuBooster,
+        coordinator: ai.dusty.finderplus.index.ModelCoordinator,
+        perfPrefs: ai.dusty.finderplus.index.PerfPrefs,
+        vlmCaptioner: ai.dusty.finderplus.speech.VlmCaptioner,
+        captionBudget: ai.dusty.finderplus.index.CaptionBudget,
+        vaultPolicy: ai.dusty.finderplus.index.VaultPolicy,
         statusListener: IndexStatusListener,
     ): IndexOrchestrator = IndexEngine.create(
         context = context,

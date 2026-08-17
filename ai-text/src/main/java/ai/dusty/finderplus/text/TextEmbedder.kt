@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.text
+package ai.dusty.finderplus.text
 
 /**
  * Multilingual sentence embedder. The SAME instance embeds transcript chunks at index time and the

@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.db
+package ai.dusty.finderplus.db
 
 import android.content.Context
 import androidx.room.Database
@@ -6,29 +6,29 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import ai.rightone.finderplus.db.dao.ContentDao
-import ai.rightone.finderplus.db.dao.EmbeddingDao
-import ai.rightone.finderplus.db.dao.FtsDao
-import ai.rightone.finderplus.db.dao.IndexRunDao
-import ai.rightone.finderplus.db.dao.MediaItemDao
-import ai.rightone.finderplus.db.dao.FaceDao
-import ai.rightone.finderplus.db.dao.LabelPrototypeDao
-import ai.rightone.finderplus.db.dao.MediaProfileDao
-import ai.rightone.finderplus.db.dao.TermDfDao
-import ai.rightone.finderplus.db.dao.WorkUnitDao
-import ai.rightone.finderplus.db.entity.DocumentEntity
-import ai.rightone.finderplus.db.entity.EmbeddingEntity
-import ai.rightone.finderplus.db.entity.FaceEntity
-import ai.rightone.finderplus.db.entity.IndexRunEntity
-import ai.rightone.finderplus.db.entity.MediaItemEntity
-import ai.rightone.finderplus.db.entity.MediaProfileEntity
-import ai.rightone.finderplus.db.entity.LabelPrototypeEntity
-import ai.rightone.finderplus.db.entity.PersonEntity
-import ai.rightone.finderplus.db.entity.SegmentEntity
-import ai.rightone.finderplus.db.entity.TagEntity
-import ai.rightone.finderplus.db.entity.SearchVoteEntity
-import ai.rightone.finderplus.db.entity.TermDfEntity
-import ai.rightone.finderplus.db.entity.WorkUnitEntity
+import ai.dusty.finderplus.db.dao.ContentDao
+import ai.dusty.finderplus.db.dao.EmbeddingDao
+import ai.dusty.finderplus.db.dao.FtsDao
+import ai.dusty.finderplus.db.dao.IndexRunDao
+import ai.dusty.finderplus.db.dao.MediaItemDao
+import ai.dusty.finderplus.db.dao.FaceDao
+import ai.dusty.finderplus.db.dao.LabelPrototypeDao
+import ai.dusty.finderplus.db.dao.MediaProfileDao
+import ai.dusty.finderplus.db.dao.TermDfDao
+import ai.dusty.finderplus.db.dao.WorkUnitDao
+import ai.dusty.finderplus.db.entity.DocumentEntity
+import ai.dusty.finderplus.db.entity.EmbeddingEntity
+import ai.dusty.finderplus.db.entity.FaceEntity
+import ai.dusty.finderplus.db.entity.IndexRunEntity
+import ai.dusty.finderplus.db.entity.MediaItemEntity
+import ai.dusty.finderplus.db.entity.MediaProfileEntity
+import ai.dusty.finderplus.db.entity.LabelPrototypeEntity
+import ai.dusty.finderplus.db.entity.PersonEntity
+import ai.dusty.finderplus.db.entity.SegmentEntity
+import ai.dusty.finderplus.db.entity.TagEntity
+import ai.dusty.finderplus.db.entity.SearchVoteEntity
+import ai.dusty.finderplus.db.entity.TermDfEntity
+import ai.dusty.finderplus.db.entity.WorkUnitEntity
 
 @Database(
     entities = [
@@ -60,7 +60,7 @@ abstract class FinderDatabase : RoomDatabase() {
     abstract fun faceDao(): FaceDao
     abstract fun labelPrototypeDao(): LabelPrototypeDao
     abstract fun termDfDao(): TermDfDao
-    abstract fun voteDao(): ai.rightone.finderplus.db.dao.VoteDao
+    abstract fun voteDao(): ai.dusty.finderplus.db.dao.VoteDao
 
     companion object {
         fun build(context: Context): FinderDatabase =
@@ -216,7 +216,7 @@ abstract class FinderDatabase : RoomDatabase() {
          * description of a video.
          *
          * Deleted rather than recomputed because these tags have no correct version: what a video is
-         * about is now derived by [ai.rightone.finderplus.model.Pass.CONCEPTS] from the keyframe
+         * about is now derived by [ai.dusty.finderplus.model.Pass.CONCEPTS] from the keyframe
          * embeddings, which are already stored. That is why this is a `DELETE` and not a pass-version
          * bump — a bump would re-extract and re-label 611 already-processed videos, hours of work, to
          * produce a signal that is no longer used.

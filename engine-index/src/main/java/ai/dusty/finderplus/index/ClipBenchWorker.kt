@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import android.app.Notification
 import android.content.Context
@@ -11,11 +11,11 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import ai.rightone.finderplus.db.FinderDatabase
-import ai.rightone.finderplus.db.toMediaItem
-import ai.rightone.finderplus.speech.ModelManager
-import ai.rightone.finderplus.vision.OnnxClipImageEncoder
-import ai.rightone.finderplus.vision.OrtSessions
+import ai.dusty.finderplus.db.FinderDatabase
+import ai.dusty.finderplus.db.toMediaItem
+import ai.dusty.finderplus.speech.ModelManager
+import ai.dusty.finderplus.vision.OnnxClipImageEncoder
+import ai.dusty.finderplus.vision.OrtSessions
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -61,8 +61,8 @@ class ClipBenchWorker @AssistedInject constructor(
         // A dedicated encoder rather than the injected analyzer: the shared one has already built a
         // CPU session, and reusing it would silently measure CPU while reporting the requested provider.
         val encoder = OnnxClipImageEncoder(
-            modelPath = models.pathOf(ai.rightone.finderplus.model.ModelCatalog.CLIP_IMAGE.id) ?: "",
-            modelId = ai.rightone.finderplus.model.ModelCatalog.CLIP_IMAGE.id,
+            modelPath = models.pathOf(ai.dusty.finderplus.model.ModelCatalog.CLIP_IMAGE.id) ?: "",
+            modelId = ai.dusty.finderplus.model.ModelCatalog.CLIP_IMAGE.id,
             dim = 512,
             provider = provider,
         )

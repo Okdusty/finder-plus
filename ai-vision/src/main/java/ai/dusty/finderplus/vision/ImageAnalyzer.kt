@@ -1,8 +1,8 @@
-package ai.rightone.finderplus.vision
+package ai.dusty.finderplus.vision
 
 import android.graphics.Bitmap
-import ai.rightone.finderplus.model.Tag
-import ai.rightone.finderplus.model.TagSource
+import ai.dusty.finderplus.model.Tag
+import ai.dusty.finderplus.model.TagSource
 
 data class OcrResult(val fullText: String, val lang: String?, val keywords: List<String>)
 

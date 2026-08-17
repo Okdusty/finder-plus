@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.ui
+package ai.dusty.finderplus.ui
 
 import android.content.Context
 import android.net.Uri
@@ -25,18 +25,18 @@ object VaultAccess {
     fun shareableUri(context: Context, uri: String, displayName: String?): Uri? {
         val parsed = Uri.parse(uri)
         val path = parsed.path
-        if (parsed.scheme != "file" || !ai.rightone.finderplus.media.VaultCrypto.isVaultFile(path)) return parsed
+        if (parsed.scheme != "file" || !ai.dusty.finderplus.media.VaultCrypto.isVaultFile(path)) return parsed
 
         return runCatching {
-            ai.rightone.finderplus.media.VaultCrypto.init(context)
+            ai.dusty.finderplus.media.VaultCrypto.init(context)
             val dir = File(context.cacheDir, "vault-open").apply { mkdirs() }
             dir.listFiles()?.forEach { it.delete() }
             // Name the plaintext copy after the original file, so the receiving app sees a sane
             // filename and extension rather than something.jpg.fpv.
-            val name = (displayName ?: File(path!!).name.removeSuffix(ai.rightone.finderplus.media.VaultCrypto.EXT))
+            val name = (displayName ?: File(path!!).name.removeSuffix(ai.dusty.finderplus.media.VaultCrypto.EXT))
                 .replace(Regex("[^A-Za-z0-9._-]"), "_").takeLast(96).ifEmpty { "media" }
             val staged = File(dir, name)
-            ai.rightone.finderplus.media.VaultCrypto.openDecrypting(File(path!!)).use { input ->
+            ai.dusty.finderplus.media.VaultCrypto.openDecrypting(File(path!!)).use { input ->
                 staged.outputStream().use { out -> input.copyTo(out, DEFAULT_BUFFER_SIZE) }
             }
             if (!staged.exists() || staged.length() == 0L) return null

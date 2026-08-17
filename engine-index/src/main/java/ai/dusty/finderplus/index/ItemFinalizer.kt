@@ -1,10 +1,10 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
-import ai.rightone.finderplus.db.FinderDatabase
-import ai.rightone.finderplus.db.ItemState
-import ai.rightone.finderplus.db.entity.MediaProfileEntity
-import ai.rightone.finderplus.model.DocSource
-import ai.rightone.finderplus.model.TagSource
+import ai.dusty.finderplus.db.FinderDatabase
+import ai.dusty.finderplus.db.ItemState
+import ai.dusty.finderplus.db.entity.MediaProfileEntity
+import ai.dusty.finderplus.model.DocSource
+import ai.dusty.finderplus.model.TagSource
 
 /**
  * After a pass completes, refreshes the item's search artifacts — the FTS row AND the consolidated
@@ -79,7 +79,7 @@ internal class ItemFinalizer(
         content.clearTags(itemId, TagSource.OCR_KEYWORD.ordinal)
         if (keywords.isNotEmpty()) {
             content.insertTags(keywords.map {
-                ai.rightone.finderplus.db.entity.TagEntity(
+                ai.dusty.finderplus.db.entity.TagEntity(
                     item_id = itemId, source = TagSource.OCR_KEYWORD.ordinal, label = it, confidence = 1f,
                 )
             })

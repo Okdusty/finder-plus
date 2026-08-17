@@ -1,28 +1,28 @@
-package ai.rightone.finderplus.di
+package ai.dusty.finderplus.di
 
 import android.content.Context
-import ai.rightone.finderplus.media.PcmDecoder
-import ai.rightone.finderplus.model.Accelerator
-import ai.rightone.finderplus.model.ModelCatalog
-import ai.rightone.finderplus.speech.FileModelManager
-import ai.rightone.finderplus.speech.ModelManager
-import ai.rightone.finderplus.speech.ModelPrefs
-import ai.rightone.finderplus.speech.Qwen3SpeechRecognizer
-import ai.rightone.finderplus.speech.SpeechRecognizer
-import ai.rightone.finderplus.vision.FaceAnalyzer
-import ai.rightone.finderplus.vision.OnnxFaceDetector
-import ai.rightone.finderplus.vision.ObjectDetector
-import ai.rightone.finderplus.text.OnnxTextEmbedder
-import ai.rightone.finderplus.text.TextEmbedder
-import ai.rightone.finderplus.vision.ClipImageEncoder
-import ai.rightone.finderplus.vision.ClipTextEncoder
-import ai.rightone.finderplus.vision.DefaultImageAnalyzer
-import ai.rightone.finderplus.vision.ImageAnalyzer
-import ai.rightone.finderplus.vision.OcrDictionary
-import ai.rightone.finderplus.vision.OnnxImageLabeler
-import ai.rightone.finderplus.vision.PaddleOcrReader
-import ai.rightone.finderplus.vision.OnnxClipImageEncoder
-import ai.rightone.finderplus.vision.OnnxClipTextEncoder
+import ai.dusty.finderplus.media.PcmDecoder
+import ai.dusty.finderplus.model.Accelerator
+import ai.dusty.finderplus.model.ModelCatalog
+import ai.dusty.finderplus.speech.FileModelManager
+import ai.dusty.finderplus.speech.ModelManager
+import ai.dusty.finderplus.speech.ModelPrefs
+import ai.dusty.finderplus.speech.Qwen3SpeechRecognizer
+import ai.dusty.finderplus.speech.SpeechRecognizer
+import ai.dusty.finderplus.vision.FaceAnalyzer
+import ai.dusty.finderplus.vision.OnnxFaceDetector
+import ai.dusty.finderplus.vision.ObjectDetector
+import ai.dusty.finderplus.text.OnnxTextEmbedder
+import ai.dusty.finderplus.text.TextEmbedder
+import ai.dusty.finderplus.vision.ClipImageEncoder
+import ai.dusty.finderplus.vision.ClipTextEncoder
+import ai.dusty.finderplus.vision.DefaultImageAnalyzer
+import ai.dusty.finderplus.vision.ImageAnalyzer
+import ai.dusty.finderplus.vision.OcrDictionary
+import ai.dusty.finderplus.vision.OnnxImageLabeler
+import ai.dusty.finderplus.vision.PaddleOcrReader
+import ai.dusty.finderplus.vision.OnnxClipImageEncoder
+import ai.dusty.finderplus.vision.OnnxClipTextEncoder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -58,14 +58,14 @@ object AiModule {
     fun objectDetector(models: ModelManager): ObjectDetector =
         // YOLOX-tiny (Apache-2.0): 80 concrete COCO classes, replacing ML Kit's `multiple objects`
         // buckets. Resolved at construction; the OBJECTS pass parks as SKIPPED until installed.
-        ai.rightone.finderplus.vision.OnnxYoloDetector(
+        ai.dusty.finderplus.vision.OnnxYoloDetector(
             modelPath = models.pathOf(ModelCatalog.YOLO_DETECT.id) ?: "",
         )
 
     @Provides @Singleton
-    fun vlmCaptioner(models: ModelManager, perfPrefs: ai.rightone.finderplus.index.PerfPrefs): ai.rightone.finderplus.speech.VlmCaptioner =
+    fun vlmCaptioner(models: ModelManager, perfPrefs: ai.dusty.finderplus.index.PerfPrefs): ai.dusty.finderplus.speech.VlmCaptioner =
         // Paths resolved per call so a download taking effect never needs a restart — same policy as ASR.
-        ai.rightone.finderplus.speech.VlmCaptioner(
+        ai.dusty.finderplus.speech.VlmCaptioner(
             modelPath = { models.pathOf(ModelCatalog.VLM_SMOL.id) },
             projectorPath = { models.pathOf(ModelCatalog.VLM_SMOL_PROJ.id) },
             useGpu = { perfPrefs.useGpu },
@@ -78,19 +78,19 @@ object AiModule {
      * which is the single case where CPU is acceptable because it is the only option.
      */
     @Provides @Singleton
-    fun localJudge(models: ModelManager): ai.rightone.finderplus.index.LocalJudge =
-        ai.rightone.finderplus.index.LocalJudge(
-            ai.rightone.finderplus.speech.VlmCaptioner(
+    fun localJudge(models: ModelManager): ai.dusty.finderplus.index.LocalJudge =
+        ai.dusty.finderplus.index.LocalJudge(
+            ai.dusty.finderplus.speech.VlmCaptioner(
                 modelPath = { models.pathOf(ModelCatalog.VLM_JUDGE.id) },
                 projectorPath = { models.pathOf(ModelCatalog.VLM_JUDGE_PROJ.id) },
                 useGpu = { true },
-                family = ai.rightone.finderplus.speech.VlmCaptioner.Family.QWEN,
+                family = ai.dusty.finderplus.speech.VlmCaptioner.Family.QWEN,
             )
         )
 
     @Provides @Singleton
-    fun cloudJudge(assist: ai.rightone.finderplus.index.AssistPrefs): ai.rightone.finderplus.index.CloudJudge =
-        ai.rightone.finderplus.index.CloudJudge(
+    fun cloudJudge(assist: ai.dusty.finderplus.index.AssistPrefs): ai.dusty.finderplus.index.CloudJudge =
+        ai.dusty.finderplus.index.CloudJudge(
             provider = { assist.provider },
             apiKey = { assist.apiKey.takeIf { it.isNotBlank() } },
             model = { assist.cloudModel },
@@ -149,9 +149,9 @@ object AiModule {
     fun speechRecognizer(
         pcm: PcmDecoder,
         models: ModelManager,
-        perfPrefs: ai.rightone.finderplus.index.PerfPrefs,
+        perfPrefs: ai.dusty.finderplus.index.PerfPrefs,
     ): SpeechRecognizer =
-        ai.rightone.finderplus.speech.DelegatingSpeechRecognizer(
+        ai.dusty.finderplus.speech.DelegatingSpeechRecognizer(
             pcm = pcm,
             // The widget's CPU/GPU switch overrides the caller's preference, so a tap takes effect on
             // the next file with no restart.

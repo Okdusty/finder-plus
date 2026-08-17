@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.speech
+package ai.dusty.finderplus.speech
 
 /** Cleaned ASR output: the transcript text plus the language the model reported. */
 data class AsrOutput(val text: String, val language: String?)

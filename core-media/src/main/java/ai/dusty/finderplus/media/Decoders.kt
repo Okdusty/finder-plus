@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.media
+package ai.dusty.finderplus.media
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -11,7 +11,7 @@ import android.media.MediaFormat
 import java.nio.ByteOrder
 import android.media.MediaMetadataRetriever
 import android.net.Uri
-import ai.rightone.finderplus.model.MediaItem
+import ai.dusty.finderplus.model.MediaItem
 
 /** A single extracted video frame plus the source timestamp (drives "where in the video" hits). */
 data class Keyframe(

@@ -1,6 +1,6 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
-import ai.rightone.finderplus.model.IndexProgress
+import ai.dusty.finderplus.model.IndexProgress
 
 /**
  * Lets the UI layer react to indexing progress without engine-index depending on :app.

@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.db.dao
+package ai.dusty.finderplus.db.dao
 
 import androidx.room.Dao
 import androidx.room.Query
@@ -6,7 +6,7 @@ import androidx.room.SkipQueryVerification
 
 /**
  * Access to the FTS4 virtual table `media_fts`. Room has no FTS-entity annotation for a
- * manually-created table, so it is created by [ai.rightone.finderplus.db.FinderDatabase]'s callback
+ * manually-created table, so it is created by [ai.dusty.finderplus.db.FinderDatabase]'s callback
  * and these queries opt out of compile-time verification. The table stores its own copy of the text
  * so a per-item rebuild is a simple DELETE-by-docid + INSERT, idempotent on re-index. §2.5.
  *

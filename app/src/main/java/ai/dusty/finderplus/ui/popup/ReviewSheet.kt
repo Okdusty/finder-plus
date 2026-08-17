@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.ui.popup
+package ai.dusty.finderplus.ui.popup
 
 import android.graphics.Bitmap
 import android.net.Uri
@@ -53,9 +53,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.ui.draw.clip
-import ai.rightone.finderplus.index.GroupKind
-import ai.rightone.finderplus.index.GroupMember
-import ai.rightone.finderplus.index.ReviewGroup
+import ai.dusty.finderplus.index.GroupKind
+import ai.dusty.finderplus.index.GroupMember
+import ai.dusty.finderplus.index.ReviewGroup
 
 /**
  * The supervisor surface: one proposed grouping at a time, every member visible, each independently
@@ -83,10 +83,10 @@ import ai.rightone.finderplus.index.ReviewGroup
 fun ReviewSheet(
     groups: List<ReviewGroup>,
     canUndo: Boolean,
-    assistMode: ai.rightone.finderplus.index.AssistPrefs.Mode,
-    onAssistMode: (ai.rightone.finderplus.index.AssistPrefs.Mode) -> Unit,
-    assistProvider: ai.rightone.finderplus.index.CloudProvider,
-    onAssistProvider: (ai.rightone.finderplus.index.CloudProvider) -> Unit,
+    assistMode: ai.dusty.finderplus.index.AssistPrefs.Mode,
+    onAssistMode: (ai.dusty.finderplus.index.AssistPrefs.Mode) -> Unit,
+    assistProvider: ai.dusty.finderplus.index.CloudProvider,
+    onAssistProvider: (ai.dusty.finderplus.index.CloudProvider) -> Unit,
     cloudModel: String,
     onCloudModel: (String) -> Unit,
     keySaved: Boolean,
@@ -313,7 +313,7 @@ private fun MemberTile(member: GroupMember, excluded: Boolean, onToggle: () -> U
     val context = LocalContext.current
     val bmp by produceState<Bitmap?>(initialValue = null, member.itemId) {
         value = runCatching {
-            ai.rightone.finderplus.ui.MediaImages.thumbnail(context, member.uri, 256)
+            ai.dusty.finderplus.ui.MediaImages.thumbnail(context, member.uri, 256)
         }.getOrNull()
     }
     Box(
@@ -378,10 +378,10 @@ internal val PersonAccent: Color @Composable get() = MaterialTheme.colorScheme.t
  */
 @Composable
 private fun AssistSettings(
-    mode: ai.rightone.finderplus.index.AssistPrefs.Mode,
-    onMode: (ai.rightone.finderplus.index.AssistPrefs.Mode) -> Unit,
-    provider: ai.rightone.finderplus.index.CloudProvider,
-    onProvider: (ai.rightone.finderplus.index.CloudProvider) -> Unit,
+    mode: ai.dusty.finderplus.index.AssistPrefs.Mode,
+    onMode: (ai.dusty.finderplus.index.AssistPrefs.Mode) -> Unit,
+    provider: ai.dusty.finderplus.index.CloudProvider,
+    onProvider: (ai.dusty.finderplus.index.CloudProvider) -> Unit,
     model: String,
     onModel: (String) -> Unit,
     keySaved: Boolean,
@@ -434,26 +434,26 @@ private fun AssistSettings(
         // ---- mode ----
         SectionRule("mode")
         ModeRow("manual", "You answer every question yourself.",
-            mode == ai.rightone.finderplus.index.AssistPrefs.Mode.MANUAL) {
-            onMode(ai.rightone.finderplus.index.AssistPrefs.Mode.MANUAL)
+            mode == ai.dusty.finderplus.index.AssistPrefs.Mode.MANUAL) {
+            onMode(ai.dusty.finderplus.index.AssistPrefs.Mode.MANUAL)
         }
         ModeRow("on-device", "Local 4B model. Private, free — minutes per image on this GPU, best left running plugged in.",
-            mode == ai.rightone.finderplus.index.AssistPrefs.Mode.LOCAL) {
-            onMode(ai.rightone.finderplus.index.AssistPrefs.Mode.LOCAL)
+            mode == ai.dusty.finderplus.index.AssistPrefs.Mode.LOCAL) {
+            onMode(ai.dusty.finderplus.index.AssistPrefs.Mode.LOCAL)
         }
         ModeRow("remote", "An API answers in seconds — or your own computer via ollama, free and private.",
-            mode == ai.rightone.finderplus.index.AssistPrefs.Mode.CLOUD) {
-            onMode(ai.rightone.finderplus.index.AssistPrefs.Mode.CLOUD)
+            mode == ai.dusty.finderplus.index.AssistPrefs.Mode.CLOUD) {
+            onMode(ai.dusty.finderplus.index.AssistPrefs.Mode.CLOUD)
         }
 
         // ---- cloud config ----
-        if (mode == ai.rightone.finderplus.index.AssistPrefs.Mode.CLOUD) {
+        if (mode == ai.dusty.finderplus.index.AssistPrefs.Mode.CLOUD) {
             SectionRule("provider")
             Row(
                 Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
-                ai.rightone.finderplus.index.CloudProvider.entries.forEach { pr ->
+                ai.dusty.finderplus.index.CloudProvider.entries.forEach { pr ->
                     val sel = pr == provider
                     Text(
                         pr.name.lowercase(),
@@ -473,7 +473,7 @@ private fun AssistSettings(
                 placeholder = "model id",
                 mono = true,
             )
-            if (provider == ai.rightone.finderplus.index.CloudProvider.OLLAMA) {
+            if (provider == ai.dusty.finderplus.index.CloudProvider.OLLAMA) {
                 var urlText by remember(provider) { mutableStateOf(ollamaUrl) }
                 AssistField(
                     value = urlText,
@@ -522,7 +522,7 @@ private fun AssistSettings(
         }
 
         Row(Modifier.fillMaxWidth().padding(top = 14.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            if (mode != ai.rightone.finderplus.index.AssistPrefs.Mode.MANUAL) {
+            if (mode != ai.dusty.finderplus.index.AssistPrefs.Mode.MANUAL) {
                 Action("Run now", accent = true, enabled = status?.run?.running != true) { onStart() }
             }
             Action("Back", accent = false, enabled = true, onClick = onBack)

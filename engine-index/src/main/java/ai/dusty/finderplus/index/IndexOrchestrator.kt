@@ -1,19 +1,19 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import androidx.room.withTransaction
-import ai.rightone.finderplus.db.FinderDatabase
-import ai.rightone.finderplus.db.RunState
-import ai.rightone.finderplus.db.WorkLedger
-import ai.rightone.finderplus.db.entity.IndexRunEntity
-import ai.rightone.finderplus.db.entity.WorkUnitEntity
-import ai.rightone.finderplus.db.toMediaItem
-import ai.rightone.finderplus.index.pass.PassHandler
-import ai.rightone.finderplus.index.pass.PassOutcome
-import ai.rightone.finderplus.index.work.Checkpoints
-import ai.rightone.finderplus.model.IndexProgress
-import ai.rightone.finderplus.model.Pass
-import ai.rightone.finderplus.model.RunStatus
-import ai.rightone.finderplus.model.Trigger
+import ai.dusty.finderplus.db.FinderDatabase
+import ai.dusty.finderplus.db.RunState
+import ai.dusty.finderplus.db.WorkLedger
+import ai.dusty.finderplus.db.entity.IndexRunEntity
+import ai.dusty.finderplus.db.entity.WorkUnitEntity
+import ai.dusty.finderplus.db.toMediaItem
+import ai.dusty.finderplus.index.pass.PassHandler
+import ai.dusty.finderplus.index.pass.PassOutcome
+import ai.dusty.finderplus.index.work.Checkpoints
+import ai.dusty.finderplus.model.IndexProgress
+import ai.dusty.finderplus.model.Pass
+import ai.dusty.finderplus.model.RunStatus
+import ai.dusty.finderplus.model.Trigger
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -111,7 +111,9 @@ internal class DefaultIndexOrchestrator(
                 // arrivals now rather than letting them sit in the gallery until someone remembers
                 // to run it. Enqueued (not inline) so a long encryption pass never stalls the scan,
                 // and a no-op when nothing matches.
-                if (summary.added > 0 && vaultPolicy.auto && vaultPolicy.hasHideRules()) {
+                if (summary.added > 0 && vaultPolicy.auto && vaultPolicy.hasHideRules() &&
+                    ai.dusty.finderplus.media.VaultCrypto.isRecoveryKeySaved(appContext)
+                ) {
                     VaultWorker.enqueue(appContext)
                 }
                 if (summary.backfilled > 0) {
@@ -138,7 +140,7 @@ internal class DefaultIndexOrchestrator(
                 // than a permanent cut.
                 captionBudget.reset()
                 val revivedCaptions = db.workUnitDao().requeueSkipped(
-                    ai.rightone.finderplus.model.Pass.CAPTION.ordinal, now())
+                    ai.dusty.finderplus.model.Pass.CAPTION.ordinal, now())
                 if (revivedCaptions > 0) android.util.Log.i(TAG, "revived $revivedCaptions parked captions")
 
                 // Recount the corpus BEFORE rebuilding artifacts: which words are distinctive is

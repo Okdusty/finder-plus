@@ -1,12 +1,12 @@
-package ai.rightone.finderplus.di
+package ai.dusty.finderplus.di
 
 import android.content.Context
-import ai.rightone.finderplus.media.AndroidFrameExtractor
-import ai.rightone.finderplus.media.AndroidMediaStoreReader
-import ai.rightone.finderplus.media.AndroidPcmDecoder
-import ai.rightone.finderplus.media.FrameExtractor
-import ai.rightone.finderplus.media.MediaStoreReader
-import ai.rightone.finderplus.media.PcmDecoder
+import ai.dusty.finderplus.media.AndroidFrameExtractor
+import ai.dusty.finderplus.media.AndroidMediaStoreReader
+import ai.dusty.finderplus.media.AndroidPcmDecoder
+import ai.dusty.finderplus.media.FrameExtractor
+import ai.dusty.finderplus.media.MediaStoreReader
+import ai.dusty.finderplus.media.PcmDecoder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,6 +1,6 @@
-package ai.rightone.finderplus.media
+package ai.dusty.finderplus.media
 
-import ai.rightone.finderplus.model.MediaKind
+import ai.dusty.finderplus.model.MediaKind
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 

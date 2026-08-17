@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import android.app.Notification
 import android.content.Context
@@ -10,10 +10,10 @@ import androidx.work.ForegroundInfo
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import ai.rightone.finderplus.db.FinderDatabase
-import ai.rightone.finderplus.db.vector.Vecs
-import ai.rightone.finderplus.model.EmbeddingKind
-import ai.rightone.finderplus.vision.ClipTextEncoder
+import ai.dusty.finderplus.db.FinderDatabase
+import ai.dusty.finderplus.db.vector.Vecs
+import ai.dusty.finderplus.model.EmbeddingKind
+import ai.dusty.finderplus.vision.ClipTextEncoder
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 

@@ -1,6 +1,6 @@
 # UI Contracts (hand-off boundary)
 
-The build stops here. These are the `UiState` / `ViewModel` / event contracts the future Glance widget and Compose pop-up bind to. They are pure Kotlin (depend only on `core-model`), so a UI implementer can start without touching the engine. Ship location: `app/src/main/java/ai/rightone/finderplus/ui/contract/`.
+The build stops here. These are the `UiState` / `ViewModel` / event contracts the future Glance widget and Compose pop-up bind to. They are pure Kotlin (depend only on `core-model`), so a UI implementer can start without touching the engine. Ship location: `app/src/main/java/ai/dusty/finderplus/ui/contract/`.
 
 ## 1. Widget
 

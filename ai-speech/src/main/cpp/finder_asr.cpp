@@ -141,7 +141,7 @@ extern "C" {
  * one `name|description|TYPE|totalMiB` record per device, newline-separated.
  */
 JNIEXPORT jstring JNICALL
-Java_ai_rightone_finderplus_speech_AsrNative_backends(JNIEnv * env, jobject) {
+Java_ai_dusty_finderplus_speech_AsrNative_backends(JNIEnv * env, jobject) {
     ensure_backend();
     std::string out;
     for (size_t i = 0; i < ggml_backend_dev_count(); i++) {
@@ -180,7 +180,7 @@ Java_ai_rightone_finderplus_speech_AsrNative_backends(JNIEnv * env, jobject) {
  *   build has no Vulkan headers.
  */
 JNIEXPORT jstring JNICALL
-Java_ai_rightone_finderplus_speech_AsrNative_vulkanCaps(JNIEnv * env, jobject) {
+Java_ai_dusty_finderplus_speech_AsrNative_vulkanCaps(JNIEnv * env, jobject) {
 #ifndef FINDER_HAS_VULKAN
     return env->NewStringUTF("");
 #else
@@ -262,7 +262,7 @@ Java_ai_rightone_finderplus_speech_AsrNative_vulkanCaps(JNIEnv * env, jobject) {
  *   us out of a little-core-only cpuset there is nothing to pin to.
  */
 JNIEXPORT jint JNICALL
-Java_ai_rightone_finderplus_speech_AsrNative_pinFastCores(JNIEnv *, jobject) {
+Java_ai_dusty_finderplus_speech_AsrNative_pinFastCores(JNIEnv *, jobject) {
     const int n_cpu = (int) sysconf(_SC_NPROCESSORS_CONF);
     if (n_cpu <= 1) return 0;
 
@@ -296,13 +296,13 @@ Java_ai_rightone_finderplus_speech_AsrNative_pinFastCores(JNIEnv *, jobject) {
 
 /** Route llama.cpp's INFO-level logs to logcat. Enabled around model load to capture backend choice. */
 JNIEXPORT void JNICALL
-Java_ai_rightone_finderplus_speech_AsrNative_setVerboseLogging(JNIEnv *, jobject, jboolean on) {
+Java_ai_dusty_finderplus_speech_AsrNative_setVerboseLogging(JNIEnv *, jobject, jboolean on) {
     std::lock_guard<std::mutex> lock(g_log_mu);
     g_log_verbose = on;
 }
 
 JNIEXPORT jlong JNICALL
-Java_ai_rightone_finderplus_speech_AsrNative_init(
+Java_ai_dusty_finderplus_speech_AsrNative_init(
         JNIEnv * env, jobject, jstring jModel, jstring jProjector, jboolean useGpu, jint threads) {
     ensure_backend();
 
@@ -360,7 +360,7 @@ Java_ai_rightone_finderplus_speech_AsrNative_init(
 }
 
 JNIEXPORT jstring JNICALL
-Java_ai_rightone_finderplus_speech_AsrNative_transcribe(
+Java_ai_dusty_finderplus_speech_AsrNative_transcribe(
         JNIEnv * env, jobject, jlong handle, jfloatArray jPcm, jstring jLangHint) {
     auto * ctx = (AsrContext *) (intptr_t) handle;
     if (ctx == nullptr || jPcm == nullptr) return env->NewStringUTF("");
@@ -459,7 +459,7 @@ Java_ai_rightone_finderplus_speech_AsrNative_transcribe(
 // loader never required audio, precisely so this path could exist. Greedy decode, hard token cap:
 // captions are search text, not prose, and every extra token is decoder time multiplied by the gallery.
 JNIEXPORT jstring JNICALL
-Java_ai_rightone_finderplus_speech_AsrNative_caption(
+Java_ai_dusty_finderplus_speech_AsrNative_caption(
         JNIEnv * env, jobject, jlong handle, jbyteArray jRgb, jint w, jint h, jint maxTokens,
         jstring jPrompt) {
     auto * ctx = (AsrContext *) (intptr_t) handle;
@@ -552,7 +552,7 @@ Java_ai_rightone_finderplus_speech_AsrNative_caption(
 }
 
 JNIEXPORT jstring JNICALL
-Java_ai_rightone_finderplus_speech_AsrNative_detectedLanguage(JNIEnv * env, jobject, jlong handle) {
+Java_ai_dusty_finderplus_speech_AsrNative_detectedLanguage(JNIEnv * env, jobject, jlong handle) {
     auto * ctx = (AsrContext *) (intptr_t) handle;
     // Qwen3-ASR does not expose a discrete language id through mtmd; language is implicit in the
     // produced text. Reported as unknown so the Kotlin side keeps auto-detect behaviour.
@@ -560,13 +560,13 @@ Java_ai_rightone_finderplus_speech_AsrNative_detectedLanguage(JNIEnv * env, jobj
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ai_rightone_finderplus_speech_AsrNative_usingGpu(JNIEnv *, jobject, jlong handle) {
+Java_ai_dusty_finderplus_speech_AsrNative_usingGpu(JNIEnv *, jobject, jlong handle) {
     auto * ctx = (AsrContext *) (intptr_t) handle;
     return ctx && ctx->gpu ? JNI_TRUE : JNI_FALSE;
 }
 
 JNIEXPORT void JNICALL
-Java_ai_rightone_finderplus_speech_AsrNative_free(JNIEnv *, jobject, jlong handle) {
+Java_ai_dusty_finderplus_speech_AsrNative_free(JNIEnv *, jobject, jlong handle) {
     auto * ctx = (AsrContext *) (intptr_t) handle;
     delete ctx;
 }

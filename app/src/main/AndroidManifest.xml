@@ -107,7 +107,7 @@
 
         <!-- Notification "Stop" action → cooperative stop + cancel the slice chain. -->
         <receiver
-            android:name="ai.rightone.finderplus.index.IndexControlReceiver"
+            android:name="ai.dusty.finderplus.index.IndexControlReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="ai.dusty.finderplus.action.STOP_INDEX" />

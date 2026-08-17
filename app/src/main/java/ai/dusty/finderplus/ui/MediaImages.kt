@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.ui
+package ai.dusty.finderplus.ui
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -20,15 +20,15 @@ object MediaImages {
             return@runCatching context.contentResolver.loadThumbnail(parsed, Size(px, px), null)
         }
         val path = parsed.path ?: return@runCatching null
-        ai.rightone.finderplus.media.VaultCrypto.init(context)
-        val encrypted = ai.rightone.finderplus.media.VaultCrypto.isVaultFile(path)
+        ai.dusty.finderplus.media.VaultCrypto.init(context)
+        val encrypted = ai.dusty.finderplus.media.VaultCrypto.isVaultFile(path)
         val file = java.io.File(path)
 
         // Image first: cheap bounds probe + sampled decode, reading through the decryptor when the
         // file is a vault blob. Falls through to a video frame grab.
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
         if (encrypted) {
-            ai.rightone.finderplus.media.VaultCrypto.openDecrypting(file).use { BitmapFactory.decodeStream(it, null, bounds) }
+            ai.dusty.finderplus.media.VaultCrypto.openDecrypting(file).use { BitmapFactory.decodeStream(it, null, bounds) }
         } else BitmapFactory.decodeFile(path, bounds)
 
         if (bounds.outWidth > 0) {
@@ -36,12 +36,12 @@ object MediaImages {
             while (maxOf(bounds.outWidth, bounds.outHeight) / (sample * 2) >= px) sample *= 2
             val opts = BitmapFactory.Options().apply { inSampleSize = sample }
             return@runCatching if (encrypted) {
-                ai.rightone.finderplus.media.VaultCrypto.openDecrypting(file).use { BitmapFactory.decodeStream(it, null, opts) }
+                ai.dusty.finderplus.media.VaultCrypto.openDecrypting(file).use { BitmapFactory.decodeStream(it, null, opts) }
             } else BitmapFactory.decodeFile(path, opts)
         }
         val r = MediaMetadataRetriever()
         try {
-            if (encrypted) r.setDataSource(ai.rightone.finderplus.media.VaultCrypto.dataSource(file))
+            if (encrypted) r.setDataSource(ai.dusty.finderplus.media.VaultCrypto.dataSource(file))
             else r.setDataSource(path)
             r.frameAtTime
         } finally {

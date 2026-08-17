@@ -1,10 +1,10 @@
-package ai.rightone.finderplus.di
+package ai.dusty.finderplus.di
 
 import android.content.Context
 import androidx.glance.appwidget.updateAll
-import ai.rightone.finderplus.index.IndexStatusListener
-import ai.rightone.finderplus.model.IndexProgress
-import ai.rightone.finderplus.ui.widget.FinderWidget
+import ai.dusty.finderplus.index.IndexStatusListener
+import ai.dusty.finderplus.model.IndexProgress
+import ai.dusty.finderplus.ui.widget.FinderWidget
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,23 +1,23 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import android.content.Context
-import ai.rightone.finderplus.db.FinderDatabase
-import ai.rightone.finderplus.db.WorkLedger
-import ai.rightone.finderplus.index.pass.ImageEmbedPassHandler
-import ai.rightone.finderplus.index.pass.ImageLabelPassHandler
-import ai.rightone.finderplus.index.pass.KeyframesPassHandler
-import ai.rightone.finderplus.index.pass.MetadataPassHandler
-import ai.rightone.finderplus.index.pass.FacesPassHandler
-import ai.rightone.finderplus.index.pass.ObjectsPassHandler
-import ai.rightone.finderplus.index.pass.OcrPassHandler
-import ai.rightone.finderplus.index.pass.PassHandler
-import ai.rightone.finderplus.index.pass.TextEmbedPassHandler
-import ai.rightone.finderplus.index.pass.TranscribePassHandler
-import ai.rightone.finderplus.media.FrameExtractor
-import ai.rightone.finderplus.media.MediaStoreReader
-import ai.rightone.finderplus.speech.SpeechRecognizer
-import ai.rightone.finderplus.text.TextEmbedder
-import ai.rightone.finderplus.vision.ImageAnalyzer
+import ai.dusty.finderplus.db.FinderDatabase
+import ai.dusty.finderplus.db.WorkLedger
+import ai.dusty.finderplus.index.pass.ImageEmbedPassHandler
+import ai.dusty.finderplus.index.pass.ImageLabelPassHandler
+import ai.dusty.finderplus.index.pass.KeyframesPassHandler
+import ai.dusty.finderplus.index.pass.MetadataPassHandler
+import ai.dusty.finderplus.index.pass.FacesPassHandler
+import ai.dusty.finderplus.index.pass.ObjectsPassHandler
+import ai.dusty.finderplus.index.pass.OcrPassHandler
+import ai.dusty.finderplus.index.pass.PassHandler
+import ai.dusty.finderplus.index.pass.TextEmbedPassHandler
+import ai.dusty.finderplus.index.pass.TranscribePassHandler
+import ai.dusty.finderplus.media.FrameExtractor
+import ai.dusty.finderplus.media.MediaStoreReader
+import ai.dusty.finderplus.speech.SpeechRecognizer
+import ai.dusty.finderplus.text.TextEmbedder
+import ai.dusty.finderplus.vision.ImageAnalyzer
 
 /**
  * Assembles the orchestrator from public collaborators, keeping the scanner, finalizer, coordinator,
@@ -32,8 +32,8 @@ object IndexEngine {
         reader: MediaStoreReader,
         frameExtractor: FrameExtractor,
         imageAnalyzer: ImageAnalyzer,
-        objectDetector: ai.rightone.finderplus.vision.ObjectDetector,
-        faceAnalyzer: ai.rightone.finderplus.vision.FaceAnalyzer,
+        objectDetector: ai.dusty.finderplus.vision.ObjectDetector,
+        faceAnalyzer: ai.dusty.finderplus.vision.FaceAnalyzer,
         speechRecognizer: SpeechRecognizer,
         textEmbedder: TextEmbedder,
         workLedger: WorkLedger,
@@ -42,7 +42,7 @@ object IndexEngine {
         cpuBooster: CpuBooster,
         coordinator: ModelCoordinator,
         perfPrefs: PerfPrefs,
-        vlmCaptioner: ai.rightone.finderplus.speech.VlmCaptioner,
+        vlmCaptioner: ai.dusty.finderplus.speech.VlmCaptioner,
         captionBudget: CaptionBudget,
         vaultPolicy: VaultPolicy,
         statusListener: IndexStatusListener = IndexStatusListener.NoOp,
@@ -59,10 +59,10 @@ object IndexEngine {
             KeyframesPassHandler(frameExtractor, imageAnalyzer, coordinator, clipModelId),
             TranscribePassHandler(speechRecognizer, coordinator),
             TextEmbedPassHandler(db.contentDao(), textEmbedder, coordinator),
-            ai.rightone.finderplus.index.pass.ConceptsPassHandler(conceptClassifier),
-            ai.rightone.finderplus.index.pass.CaptionPassHandler(
+            ai.dusty.finderplus.index.pass.ConceptsPassHandler(conceptClassifier),
+            ai.dusty.finderplus.index.pass.CaptionPassHandler(
                 context, imageCache, vlmCaptioner, coordinator, captionBudget,
-                remainingCaptions = { db.workUnitDao().pendingForPass(ai.rightone.finderplus.model.Pass.CAPTION.ordinal) },
+                remainingCaptions = { db.workUnitDao().pendingForPass(ai.dusty.finderplus.model.Pass.CAPTION.ordinal) },
             ),
         )
         val termStats = TermStats(db)

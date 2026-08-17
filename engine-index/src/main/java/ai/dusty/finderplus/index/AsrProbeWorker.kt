@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import android.app.Notification
 import android.content.Context
@@ -11,11 +11,11 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import ai.rightone.finderplus.db.FinderDatabase
-import ai.rightone.finderplus.db.toMediaItem
-import ai.rightone.finderplus.model.MediaKind
-import ai.rightone.finderplus.speech.SpeechRecognizer
-import ai.rightone.finderplus.speech.TranscribeCursor
+import ai.dusty.finderplus.db.FinderDatabase
+import ai.dusty.finderplus.db.toMediaItem
+import ai.dusty.finderplus.model.MediaKind
+import ai.dusty.finderplus.speech.SpeechRecognizer
+import ai.dusty.finderplus.speech.TranscribeCursor
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -36,8 +36,8 @@ class AsrProbeWorker @AssistedInject constructor(
     private val recognizer: SpeechRecognizer,
     private val booster: CpuBooster,
     private val coordinator: ModelCoordinator,
-    private val pcm: ai.rightone.finderplus.media.PcmDecoder,
-    private val models: ai.rightone.finderplus.speech.ModelManager,
+    private val pcm: ai.dusty.finderplus.media.PcmDecoder,
+    private val models: ai.dusty.finderplus.speech.ModelManager,
 ) : CoroutineWorker(appContext, params) {
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
@@ -68,10 +68,10 @@ class AsrProbeWorker @AssistedInject constructor(
         // ggml logs its device capabilities and tensor placement during load, which is the only way to
         // see them. Scoped to this probe: the flag is global and process-lived, and left on it floods
         // logcat badly enough to evict the very lines worth reading.
-        ai.rightone.finderplus.speech.SpeechBackends.setVerboseLogging(true)
+        ai.dusty.finderplus.speech.SpeechBackends.setVerboseLogging(true)
         val engine: SpeechRecognizer = if (useGpu) recognizer else
-            ai.rightone.finderplus.speech.Qwen3SpeechRecognizer(pcm, configProvider = {
-                models.asrConfig(ai.rightone.finderplus.model.Accelerator.CPU)
+            ai.dusty.finderplus.speech.Qwen3SpeechRecognizer(pcm, configProvider = {
+                models.asrConfig(ai.dusty.finderplus.model.Accelerator.CPU)
             })
         val applied = if (wantBoost) booster.boost() else false
         log("probe start: kind=$kind gpu=$useGpu ready=${engine.isReady()} " +
@@ -99,7 +99,7 @@ class AsrProbeWorker @AssistedInject constructor(
             // Same residency lock the TRANSCRIBE pass uses. Without it this probe can run a second ASR
             // context alongside a live index — two 1 GB models on one GPU, which does not fail, it just
             // makes both of them crawl.
-            coordinator.withModel(ai.rightone.finderplus.model.RequiredModel.ASR) {
+            coordinator.withModel(ai.dusty.finderplus.model.RequiredModel.ASR) {
             engine.transcribe(
                 item = item,
                 from = TranscribeCursor(0L, null),
@@ -127,7 +127,7 @@ class AsrProbeWorker @AssistedInject constructor(
         } finally {
             // The flag is global and process-lived; left on, ggml's firehose evicts the very lines
             // worth reading. Model load has happened by now, so the capability output is already out.
-            ai.rightone.finderplus.speech.SpeechBackends.setVerboseLogging(false)
+            ai.dusty.finderplus.speech.SpeechBackends.setVerboseLogging(false)
         }
         val ms = System.currentTimeMillis() - t0
         log(

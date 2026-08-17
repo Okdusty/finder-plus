@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

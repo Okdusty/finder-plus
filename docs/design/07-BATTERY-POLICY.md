@@ -11,7 +11,7 @@ There were **three independent causes**, all now fixed.
 
 A `CoroutineWorker` is force-stopped after ~10 minutes. Our drain loop tried to process all 19,657
 units in one worker, so **every run was killed mid-flight** — visible on-device as
-`ai.rightone.finderplus::timeout-reg` and `::anr` quota entries in `dumpsys jobscheduler`, and as four
+`ai.dusty.finderplus::timeout-reg` and `::anr` quota entries in `dumpsys jobscheduler`, and as four
 `index_run` rows each frozen at a different `done_units`.
 
 **Fix — bounded slices that self-reschedule.** `IndexOrchestrator.runSlice()` drains for a wall-clock

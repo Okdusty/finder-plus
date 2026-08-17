@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.media
+package ai.dusty.finderplus.media
 
 import android.content.ContentResolver
 import android.content.Context

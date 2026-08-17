@@ -1,4 +1,4 @@
-package ai.rightone.finderplus
+package ai.dusty.finderplus
 
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
@@ -23,7 +23,7 @@ class FinderApp : Application(), Configuration.Provider {
         // removes an ordering bug that was invisible by construction: a decode path that ran before
         // any vault operation threw, was swallowed, and simply produced no image — hidden media
         // silently unreadable to the indexer while looking fine everywhere else.
-        ai.rightone.finderplus.media.VaultCrypto.init(this)
+        ai.dusty.finderplus.media.VaultCrypto.init(this)
     }
 
     override val workManagerConfiguration: Configuration

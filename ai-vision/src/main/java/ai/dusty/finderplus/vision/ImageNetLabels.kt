@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.vision
+package ai.dusty.finderplus.vision
 
 /**
  * ImageNet-1k class labels for the bundled-vocabulary image labeler (MobileNetV2, Apache-2.0).

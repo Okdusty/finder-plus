@@ -1,7 +1,7 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
-import ai.rightone.finderplus.db.FinderDatabase
-import ai.rightone.finderplus.model.TagSource
+import ai.dusty.finderplus.db.FinderDatabase
+import ai.dusty.finderplus.model.TagSource
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -159,7 +159,7 @@ class ReviewGroups @Inject constructor(
         val label: String? = null,
         val accepted: List<Long> = emptyList(),
         val declined: List<Long> = emptyList(),
-        val prototypeBefore: ai.rightone.finderplus.db.entity.LabelPrototypeEntity? = null,
+        val prototypeBefore: ai.dusty.finderplus.db.entity.LabelPrototypeEntity? = null,
         val prototypeExisted: Boolean = false,
         val personId: Long? = null,
     )
@@ -192,13 +192,13 @@ class ReviewGroups @Inject constructor(
         val label = a.label
         if (label != null) {
             for (id in a.accepted) {
-                db.contentDao().deleteTagRow(id, ai.rightone.finderplus.model.TagSource.USER.ordinal, label)
+                db.contentDao().deleteTagRow(id, ai.dusty.finderplus.model.TagSource.USER.ordinal, label)
             }
             // Both accepted and declined had their SUGGESTED row consumed; both get it back.
             val restore = (a.accepted + a.declined).map { id ->
-                ai.rightone.finderplus.db.entity.TagEntity(
+                ai.dusty.finderplus.db.entity.TagEntity(
                     item_id = id,
-                    source = ai.rightone.finderplus.model.TagSource.SUGGESTED.ordinal,
+                    source = ai.dusty.finderplus.model.TagSource.SUGGESTED.ordinal,
                     label = label,
                     confidence = memberScores[id] ?: 0.2f,
                 )
@@ -233,7 +233,7 @@ class ReviewGroups @Inject constructor(
         val now = System.currentTimeMillis()
         val clean = name.trim()
         val personId = db.faceDao().insertPerson(
-            ai.rightone.finderplus.db.entity.PersonEntity(
+            ai.dusty.finderplus.db.entity.PersonEntity(
                 name = if (reject || clean.isEmpty()) null else clean,
                 cover_face_id = faceIds.first(),
                 centroid = null,
@@ -264,9 +264,9 @@ class ReviewGroups @Inject constructor(
         if (accept) {
             content.insertTags(
                 listOf(
-                    ai.rightone.finderplus.db.entity.TagEntity(
+                    ai.dusty.finderplus.db.entity.TagEntity(
                         item_id = itemId,
-                        source = ai.rightone.finderplus.model.TagSource.VLM.ordinal,
+                        source = ai.dusty.finderplus.model.TagSource.VLM.ordinal,
                         label = label,
                         confidence = 1f,
                     )
@@ -319,14 +319,14 @@ class ReviewGroups @Inject constructor(
         val similar = content.itemsWithLabel(
             label,
             listOf(
-                ai.rightone.finderplus.model.TagSource.LEARNED.ordinal,
-                ai.rightone.finderplus.model.TagSource.CONCEPT.ordinal,
-                ai.rightone.finderplus.model.TagSource.SUGGESTED.ordinal,
+                ai.dusty.finderplus.model.TagSource.LEARNED.ordinal,
+                ai.dusty.finderplus.model.TagSource.CONCEPT.ordinal,
+                ai.dusty.finderplus.model.TagSource.SUGGESTED.ordinal,
             ),
         ).filter { it != itemId }
         if (similar.isEmpty()) return 0
         val queued = db.workUnitDao().requeueForItems(
-            ai.rightone.finderplus.model.Pass.CONCEPTS.ordinal, similar, System.currentTimeMillis(),
+            ai.dusty.finderplus.model.Pass.CONCEPTS.ordinal, similar, System.currentTimeMillis(),
         )
         android.util.Log.i(TAG, "label '$label' removed from item $itemId; $queued similar items queued for reconsideration")
         return queued
@@ -345,9 +345,9 @@ class ReviewGroups @Inject constructor(
         if (clean.isEmpty()) return
         db.contentDao().insertTags(
             listOf(
-                ai.rightone.finderplus.db.entity.TagEntity(
+                ai.dusty.finderplus.db.entity.TagEntity(
                     item_id = itemId,
-                    source = ai.rightone.finderplus.model.TagSource.USER.ordinal,
+                    source = ai.dusty.finderplus.model.TagSource.USER.ordinal,
                     label = clean,
                     confidence = 1f,
                 )
@@ -368,7 +368,7 @@ class ReviewGroups @Inject constructor(
      */
     suspend fun revertJudgedLabel(label: String): Int {
         val affected = db.contentDao().itemsWithLabel(
-            label, listOf(ai.rightone.finderplus.model.TagSource.VLM.ordinal),
+            label, listOf(ai.dusty.finderplus.model.TagSource.VLM.ordinal),
         )
         val purged = db.contentDao().purgeVlmLabel(label)
         for (id in affected) runCatching { ItemFinalizer(db).rebuildSearch(id) }

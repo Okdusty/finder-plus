@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.media
+package ai.dusty.finderplus.media
 
 /** The prior indexed signature of a file (from the DB), for diffing against a fresh [MediaDigest]. */
 data class IndexedSignature(

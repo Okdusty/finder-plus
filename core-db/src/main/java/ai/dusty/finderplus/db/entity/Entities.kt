@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.db.entity
+package ai.dusty.finderplus.db.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey

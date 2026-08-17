@@ -1,14 +1,14 @@
-package ai.rightone.finderplus.di
+package ai.dusty.finderplus.di
 
-import ai.rightone.finderplus.db.dao.ContentDao
-import ai.rightone.finderplus.db.dao.FtsDao
-import ai.rightone.finderplus.db.dao.MediaItemDao
-import ai.rightone.finderplus.db.dao.MediaProfileDao
-import ai.rightone.finderplus.db.vector.VectorStore
-import ai.rightone.finderplus.search.DefaultSearchEngine
-import ai.rightone.finderplus.search.SearchEngine
-import ai.rightone.finderplus.text.TextEmbedder
-import ai.rightone.finderplus.vision.ClipTextEncoder
+import ai.dusty.finderplus.db.dao.ContentDao
+import ai.dusty.finderplus.db.dao.FtsDao
+import ai.dusty.finderplus.db.dao.MediaItemDao
+import ai.dusty.finderplus.db.dao.MediaProfileDao
+import ai.dusty.finderplus.db.vector.VectorStore
+import ai.dusty.finderplus.search.DefaultSearchEngine
+import ai.dusty.finderplus.search.SearchEngine
+import ai.dusty.finderplus.text.TextEmbedder
+import ai.dusty.finderplus.vision.ClipTextEncoder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,7 +19,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object SearchModule {
 
-    @Provides fun mediaProfileDao(db: ai.rightone.finderplus.db.FinderDatabase): MediaProfileDao =
+    @Provides fun mediaProfileDao(db: ai.dusty.finderplus.db.FinderDatabase): MediaProfileDao =
         db.mediaProfileDao()
 
     @Provides @Singleton
@@ -31,7 +31,7 @@ object SearchModule {
         vectorStore: VectorStore,
         clipText: ClipTextEncoder,
         textEmbedder: TextEmbedder,
-        db: ai.rightone.finderplus.db.FinderDatabase,
+        db: ai.dusty.finderplus.db.FinderDatabase,
     ): SearchEngine = DefaultSearchEngine(
         ftsDao = ftsDao,
         mediaItemDao = mediaItemDao,
@@ -40,7 +40,7 @@ object SearchModule {
         vectorStore = vectorStore,
         clipText = clipText,
         textEmbedder = textEmbedder,
-        speller = ai.rightone.finderplus.search.QuerySpeller(db.termDfDao()),
+        speller = ai.dusty.finderplus.search.QuerySpeller(db.termDfDao()),
         voteDao = db.voteDao(),
     )
 }

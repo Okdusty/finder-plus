@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import android.app.Notification
 import android.app.NotificationManager
@@ -11,8 +11,8 @@ import androidx.work.ForegroundInfo
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import ai.rightone.finderplus.db.FinderDatabase
-import ai.rightone.finderplus.model.RequiredModel
+import ai.dusty.finderplus.db.FinderDatabase
+import ai.dusty.finderplus.model.RequiredModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
  * batched prompt together with the caption request, so one prefill (the expensive part — minutes on
  * the local judge) answers everything asked about that image.
  *
- * Every verdict lands with machine provenance ([ai.rightone.finderplus.model.TagSource.VLM]) and
+ * Every verdict lands with machine provenance ([ai.dusty.finderplus.model.TagSource.VLM]) and
  * teaches the prototypes; judged items get their caption rewritten by the same stronger model — the
  * SmolVLM caption was written by a model an order of magnitude smaller.
  *
@@ -97,7 +97,7 @@ class JudgeWorker @AssistedInject constructor(
         stopIntent.setPackage(applicationContext.packageName)
         applicationContext.sendBroadcast(stopIntent)
 
-        val byItem: Map<Long, List<ai.rightone.finderplus.db.entity.TagEntity>> =
+        val byItem: Map<Long, List<ai.dusty.finderplus.db.entity.TagEntity>> =
             pending.groupBy { it.item_id }
         log("judging ${pending.size} suggestions across ${byItem.size} items with ${judge.name()}")
         assistPrefs.noteRunStart(byItem.size)
@@ -194,10 +194,10 @@ class JudgeWorker @AssistedInject constructor(
             // answered *something* decisively; an all-UNSURE reply means it couldn't see this image
             // well, and a caption from that same failed look inherits the doubt.
             if (decisive && !caption.isNullOrBlank()) {
-                val docId = db.contentDao().document(itemId, ai.rightone.finderplus.model.DocSource.CAPTION.ordinal)?.id
+                val docId = db.contentDao().document(itemId, ai.dusty.finderplus.model.DocSource.CAPTION.ordinal)?.id
                     ?: db.contentDao().upsertDocument(
-                        ai.rightone.finderplus.db.entity.DocumentEntity(
-                            item_id = itemId, source = ai.rightone.finderplus.model.DocSource.CAPTION.ordinal,
+                        ai.dusty.finderplus.db.entity.DocumentEntity(
+                            item_id = itemId, source = ai.dusty.finderplus.model.DocSource.CAPTION.ordinal,
                             lang = null, text = "", created_at = System.currentTimeMillis(),
                         )
                     )

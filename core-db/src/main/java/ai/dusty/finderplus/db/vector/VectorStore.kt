@@ -1,7 +1,7 @@
-package ai.rightone.finderplus.db.vector
+package ai.dusty.finderplus.db.vector
 
-import ai.rightone.finderplus.db.dao.EmbeddingDao
-import ai.rightone.finderplus.model.EmbeddingKind
+import ai.dusty.finderplus.db.dao.EmbeddingDao
+import ai.dusty.finderplus.model.EmbeddingKind
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 

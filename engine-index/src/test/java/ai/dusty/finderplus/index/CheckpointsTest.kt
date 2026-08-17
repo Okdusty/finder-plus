@@ -1,7 +1,7 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
-import ai.rightone.finderplus.index.work.Checkpoint
-import ai.rightone.finderplus.index.work.Checkpoints
+import ai.dusty.finderplus.index.work.Checkpoint
+import ai.dusty.finderplus.index.work.Checkpoints
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 

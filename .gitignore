@@ -15,3 +15,12 @@ local.properties
 keys/
 *.jks
 *.keystore
+
+# Built / exported artifacts
+*.apk
+*.aab
+/dist/
+
+# Tooling scratch (Kotlin language server, agent metadata)
+kls_database.db
+.claude/

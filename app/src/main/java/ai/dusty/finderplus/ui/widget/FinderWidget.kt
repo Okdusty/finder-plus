@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.ui.widget
+package ai.dusty.finderplus.ui.widget
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -28,13 +28,13 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ai.rightone.finderplus.db.RunState
-import ai.rightone.finderplus.db.dao.IndexRunDao
-import ai.rightone.finderplus.db.dao.MediaItemDao
-import ai.rightone.finderplus.index.IndexOrchestrator
-import ai.rightone.finderplus.index.IndexWorker
-import ai.rightone.finderplus.model.MediaKind
-import ai.rightone.finderplus.ui.popup.SearchPopupActivity
+import ai.dusty.finderplus.db.RunState
+import ai.dusty.finderplus.db.dao.IndexRunDao
+import ai.dusty.finderplus.db.dao.MediaItemDao
+import ai.dusty.finderplus.index.IndexOrchestrator
+import ai.dusty.finderplus.index.IndexWorker
+import ai.dusty.finderplus.model.MediaKind
+import ai.dusty.finderplus.ui.popup.SearchPopupActivity
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -53,7 +53,7 @@ class FinderWidget : GlanceAppWidget() {
         fun mediaItemDao(): MediaItemDao
         fun indexRunDao(): IndexRunDao
         fun orchestrator(): IndexOrchestrator
-        fun perfPrefs(): ai.rightone.finderplus.index.PerfPrefs
+        fun perfPrefs(): ai.dusty.finderplus.index.PerfPrefs
     }
 
     /**

@@ -37,7 +37,7 @@ std::string wjstr(JNIEnv * env, jstring s) {
 extern "C" {
 
 JNIEXPORT jlong JNICALL
-Java_ai_rightone_finderplus_speech_WhisperNative_init(
+Java_ai_dusty_finderplus_speech_WhisperNative_init(
         JNIEnv * env, jobject, jstring jModel, jboolean useGpu) {
     const std::string path = wjstr(env, jModel);
     if (path.empty()) {
@@ -69,7 +69,7 @@ Java_ai_rightone_finderplus_speech_WhisperNative_init(
  *   Kotlin side gets real per-utterance timings instead of one span covering the whole chunk.
  */
 JNIEXPORT jstring JNICALL
-Java_ai_rightone_finderplus_speech_WhisperNative_transcribe(
+Java_ai_dusty_finderplus_speech_WhisperNative_transcribe(
         JNIEnv * env, jobject, jlong handle, jfloatArray jPcm, jstring jLang, jint threads) {
     auto * ctx = (whisper_context *) (intptr_t) handle;
     if (ctx == nullptr || jPcm == nullptr) return env->NewStringUTF("");
@@ -125,7 +125,7 @@ Java_ai_rightone_finderplus_speech_WhisperNative_transcribe(
 
 /** Language Whisper detected for the last window, or "" when it could not tell. */
 JNIEXPORT jstring JNICALL
-Java_ai_rightone_finderplus_speech_WhisperNative_detectedLanguage(JNIEnv * env, jobject, jlong handle) {
+Java_ai_dusty_finderplus_speech_WhisperNative_detectedLanguage(JNIEnv * env, jobject, jlong handle) {
     auto * ctx = (whisper_context *) (intptr_t) handle;
     if (ctx == nullptr) return env->NewStringUTF("");
     const int id = whisper_full_lang_id(ctx);
@@ -134,7 +134,7 @@ Java_ai_rightone_finderplus_speech_WhisperNative_detectedLanguage(JNIEnv * env, 
 }
 
 JNIEXPORT void JNICALL
-Java_ai_rightone_finderplus_speech_WhisperNative_free(JNIEnv *, jobject, jlong handle) {
+Java_ai_dusty_finderplus_speech_WhisperNative_free(JNIEnv *, jobject, jlong handle) {
     if (handle != 0) whisper_free((whisper_context *) (intptr_t) handle);
 }
 

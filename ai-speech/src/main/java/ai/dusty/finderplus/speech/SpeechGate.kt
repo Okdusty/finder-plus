@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.speech
+package ai.dusty.finderplus.speech
 
 /**
  * Decides whether an audio window is worth transcribing, using the best detector installed.

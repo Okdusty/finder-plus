@@ -1,6 +1,6 @@
-package ai.rightone.finderplus.search
+package ai.dusty.finderplus.search
 
-import ai.rightone.finderplus.db.dao.TermDfDao
+import ai.dusty.finderplus.db.dao.TermDfDao
 
 /**
  * Typo correction whose dictionary is the gallery itself.

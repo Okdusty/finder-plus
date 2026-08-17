@@ -1,6 +1,6 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
-import ai.rightone.finderplus.db.dao.IndexRunDao
+import ai.dusty.finderplus.db.dao.IndexRunDao
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**

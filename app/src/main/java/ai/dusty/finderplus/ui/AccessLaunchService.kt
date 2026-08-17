@@ -1,9 +1,9 @@
-package ai.rightone.finderplus.ui
+package ai.dusty.finderplus.ui
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
 import android.view.accessibility.AccessibilityEvent
-import ai.rightone.finderplus.ui.popup.SearchPopupActivity
+import ai.dusty.finderplus.ui.popup.SearchPopupActivity
 
 /**
  * Launch-only accessibility service, so the system-wide accessibility shortcut (volume-keys hold, or

@@ -37,7 +37,7 @@
 # deliberately opt-in rather than something the app does behind your back. The app's own thermal
 # governor still applies, and it still stops at CRITICAL.
 
-PKG=ai.rightone.finderplus
+PKG=ai.dusty.finderplus
 TARGET=/dev/cpuset/top-app
 INTERVAL=5
 

@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 /**
  * The concept space the app recognizes without being taught — organized as a **hierarchy**, which is

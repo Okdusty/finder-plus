@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.search
+package ai.dusty.finderplus.search
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test

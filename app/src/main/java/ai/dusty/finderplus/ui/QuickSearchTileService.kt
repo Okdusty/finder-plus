@@ -1,10 +1,10 @@
-package ai.rightone.finderplus.ui
+package ai.dusty.finderplus.ui
 
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
 import android.service.quicksettings.TileService
-import ai.rightone.finderplus.ui.popup.SearchPopupActivity
+import ai.dusty.finderplus.ui.popup.SearchPopupActivity
 
 /**
  * Quick Settings tile → the search pop-up. Two swipes from any screen without touching the launcher,

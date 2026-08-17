@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.model
+package ai.dusty.finderplus.model
 
 /** The heavy model a [Pass] needs resident. NONE and MLKIT are lightweight and exempt from the
  *  single-heavy-model residency lock; the rest are gated by it. Ordinals are persisted onto work

@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.ui.label
+package ai.dusty.finderplus.ui.label
 
 import android.content.Intent
 import android.os.Bundle
@@ -28,7 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
-import ai.rightone.finderplus.index.MediaLabeler
+import ai.dusty.finderplus.index.MediaLabeler
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
  * Label one specific item. finder+ registers for VIEW and SEND on media, so it appears in any gallery's
  * "Open with" / "Share" menu — the user picks a file and tags it directly.
  *
- * Labels land as [ai.rightone.finderplus.model.TagSource.USER] and the item's search artifacts are
+ * Labels land as [ai.dusty.finderplus.model.TagSource.USER] and the item's search artifacts are
  * rebuilt on save, so the label is searchable immediately rather than after the next index run.
  */
 @AndroidEntryPoint
@@ -50,7 +50,7 @@ class LabelActivity : ComponentActivity() {
         val uri = (intent?.data ?: intent?.getParcelableExtra<android.net.Uri>(Intent.EXTRA_STREAM))?.toString()
 
         setContent {
-            MaterialTheme(colorScheme = ai.rightone.finderplus.ui.popup.finderColorScheme()) {
+            MaterialTheme(colorScheme = ai.dusty.finderplus.ui.popup.finderColorScheme()) {
                 var itemId by remember { mutableStateOf<Long?>(null) }
                 var name by remember { mutableStateOf<String?>(null) }
                 var text by remember { mutableStateOf("") }

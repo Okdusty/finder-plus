@@ -42,14 +42,13 @@ Don't go into detail about the media; always keep it brief, don't use full sente
 
 ## What runs in the beta
 
-ML Kit's labeling and OCR models are bundled in the APK, so the passes that make a gallery searchable
-work the moment you grant media permissions:
+Bundled ML Kit labeling and OCR make the gallery searchable the moment media permission is granted:
 
-- MediaStore inventory with incremental diff by `_ID`, `DATE_MODIFIED` and `GENERATION_MODIFIED`
-- Image labels and OCR text, on device, in airplane mode
+- Gallery inventory with incremental diff
+- Image labels and OCR, on device, offline
 - Category derivation (screenshot, people, document, food, nature)
-- The consolidated per-item text profile, keyword search over it, and tap-to-clipboard
-- The widget, the pop-up, and the foreground-service indexer with a working Stop
+- Per-item text profile, keyword search, and tap-to-clipboard
+- The widget, pop-up, and indexer with a working Stop
 
 ## What is missing
 
@@ -122,7 +121,7 @@ the full catalog with URLs and reasoning lives in `core-model/.../Model.kt`.
 
 | Model | Size | Job | Licence |
 |---|---|---|---|
-| Qwen3-ASR 0.6B Q8 + projector | 805 MB + 214 MB | Speech, 30 languages including Turkish | Apache-2.0 |
+| Qwen3-ASR 0.6B Q8 + projector | 805 MB + 214 MB | Speech, 30 languages | Apache-2.0 |
 | Qwen3-ASR 1.7B Q8 + projector | 2.17 GB + 356 MB | Speech, best accuracy | Apache-2.0 |
 | Whisper small q5_1 | 190 MB | Speech, the fast path | MIT |
 | Whisper large-v3-turbo q5_0 | 574 MB | Speech, best Whisper tier | MIT |
@@ -135,12 +134,13 @@ the full catalog with URLs and reasoning lives in `core-model/.../Model.kt`.
 
 Three of these choices came out of measurements rather than preference:
 
-**Speech is Qwen3-ASR, and also Whisper.** Qwen3-ASR was picked over Whisper's small tiers because its
-30 supported languages include Turkish. Then it measured 1.6 seconds of compute per second of audio on
-the Exynos 2400, prefill-dominated and linear in length, which puts a 6.4-hour audio backlog at about
-10 hours. Whisper's encoder is far better optimised and keeps Turkish, so both engines ship and the
-model picker chooses which native path runs. Parakeet was rejected because its 25 languages exclude
-Turkish, and Nemotron-ASR because it ships only NeMo checkpoints with no on-device inference path.
+**Speech is Qwen3-ASR, and also Whisper.** Qwen3-ASR was picked over Whisper's small tiers for its
+broad 30-language coverage. Then it measured 1.6 seconds of compute per second of audio on the Exynos
+2400, prefill-dominated and linear in length, which puts a 6.4-hour audio backlog at about 10 hours.
+Whisper's encoder is far better optimised and keeps the same language coverage, so both engines ship
+and the model picker chooses which native path runs. Parakeet was rejected for its narrower
+25-language coverage, and Nemotron-ASR because it ships only NeMo checkpoints with no on-device
+inference path.
 
 **Faces need a face model.** CLIP crops did not separate identity on this gallery: the two most
 similar face crops in the whole set scored 0.868 and 0.859 and were same-photo pairs of provably

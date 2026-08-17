@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "ai.rightone.finderplus"
+    namespace = "ai.dusty.finderplus"
     compileSdk = 35
     buildToolsVersion = "36.0.0"
 

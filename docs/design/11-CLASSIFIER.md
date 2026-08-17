@@ -248,7 +248,7 @@ product development or use in any commercial product or service."
 MobileCLIP2-S2 is the best model in the table on accuracy-per-millisecond, and its preprocessing
 differs from CLIP's (mean `[0,0,0]`, std `[1,1,1]`, 256 px, bilinear — *not* the ImageNet
 normalization `ClipPreprocess` applies). It is a fine choice for a personal build. It is not a safe
-default for anything shipped under `ai.rightone.*`.
+default for anything shipped under `ai.dusty.*`.
 
 **Recommendation:** stay on ViT-B/32 now (working, verified, MIT); upgrade to **ViT-B/16 LAION-2B**
 when spatial detail becomes the limit, since it is a drop-in swap needing only a pass-version bump to

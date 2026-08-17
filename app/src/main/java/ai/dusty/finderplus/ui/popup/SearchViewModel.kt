@@ -1,16 +1,16 @@
-package ai.rightone.finderplus.ui.popup
+package ai.dusty.finderplus.ui.popup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ai.rightone.finderplus.db.dao.MediaItemDao
-import ai.rightone.finderplus.index.IndexOrchestrator
-import ai.rightone.finderplus.model.MediaKind
-import ai.rightone.finderplus.model.RunStatus
-import ai.rightone.finderplus.model.SearchResult
-import ai.rightone.finderplus.search.SearchEngine
-import ai.rightone.finderplus.ui.contract.ResultGroup
-import ai.rightone.finderplus.ui.contract.SearchEffect
-import ai.rightone.finderplus.ui.contract.SearchUiState
+import ai.dusty.finderplus.db.dao.MediaItemDao
+import ai.dusty.finderplus.index.IndexOrchestrator
+import ai.dusty.finderplus.model.MediaKind
+import ai.dusty.finderplus.model.RunStatus
+import ai.dusty.finderplus.model.SearchResult
+import ai.dusty.finderplus.search.SearchEngine
+import ai.dusty.finderplus.ui.contract.ResultGroup
+import ai.dusty.finderplus.ui.contract.SearchEffect
+import ai.dusty.finderplus.ui.contract.SearchUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -50,30 +50,30 @@ class SearchViewModel @Inject constructor(
     private val engine: SearchEngine,
     private val orchestrator: IndexOrchestrator,
     private val mediaItemDao: MediaItemDao,
-    private val contentDao: ai.rightone.finderplus.db.dao.ContentDao,
-    private val voteDao: ai.rightone.finderplus.db.dao.VoteDao,
-    private val reviewGroups: ai.rightone.finderplus.index.ReviewGroups,
-    private val assistPrefs: ai.rightone.finderplus.index.AssistPrefs,
+    private val contentDao: ai.dusty.finderplus.db.dao.ContentDao,
+    private val voteDao: ai.dusty.finderplus.db.dao.VoteDao,
+    private val reviewGroups: ai.dusty.finderplus.index.ReviewGroups,
+    private val assistPrefs: ai.dusty.finderplus.index.AssistPrefs,
     @dagger.hilt.android.qualifiers.ApplicationContext private val appContext: android.content.Context,
 ) : ViewModel() {
 
     private val _assistMode = MutableStateFlow(assistPrefs.mode)
-    val assistMode: StateFlow<ai.rightone.finderplus.index.AssistPrefs.Mode> = _assistMode
+    val assistMode: StateFlow<ai.dusty.finderplus.index.AssistPrefs.Mode> = _assistMode
 
     val hasApiKey: Boolean get() = assistPrefs.apiKey.isNotBlank()
 
     private val _assistProvider = MutableStateFlow(assistPrefs.provider)
-    val assistProvider: StateFlow<ai.rightone.finderplus.index.CloudProvider> = _assistProvider
+    val assistProvider: StateFlow<ai.dusty.finderplus.index.CloudProvider> = _assistProvider
 
     private val _cloudModel = MutableStateFlow(assistPrefs.cloudModel)
     val cloudModel: StateFlow<String> = _cloudModel
 
-    fun setAssistMode(mode: ai.rightone.finderplus.index.AssistPrefs.Mode) {
+    fun setAssistMode(mode: ai.dusty.finderplus.index.AssistPrefs.Mode) {
         assistPrefs.mode = mode
         _assistMode.value = mode
     }
 
-    fun setAssistProvider(p: ai.rightone.finderplus.index.CloudProvider) {
+    fun setAssistProvider(p: ai.dusty.finderplus.index.CloudProvider) {
         assistPrefs.provider = p
         _assistProvider.value = p
         _cloudModel.value = assistPrefs.cloudModel
@@ -99,8 +99,8 @@ class SearchViewModel @Inject constructor(
     /** Everything the assist panel shows: queue depth, live run progress, what the judge applied. */
     data class AssistStatus(
         val pending: Int,
-        val run: ai.rightone.finderplus.index.AssistPrefs.Status,
-        val judged: List<ai.rightone.finderplus.db.dao.LabelCount>,
+        val run: ai.dusty.finderplus.index.AssistPrefs.Status,
+        val judged: List<ai.dusty.finderplus.db.dao.LabelCount>,
     )
 
     private val _assistStatus = MutableStateFlow<AssistStatus?>(null)
@@ -120,7 +120,7 @@ class SearchViewModel @Inject constructor(
     /** Take back everything the judge said about one label. */
     fun revertAiLabel(label: String) = viewModelScope.launch {
         val purged = runCatching { reviewGroups.revertJudgedLabel(label) }.getOrDefault(0)
-        _effects.emit(ai.rightone.finderplus.ui.contract.SearchEffect.Toast("Reverted \"$label\" on $purged items"))
+        _effects.emit(ai.dusty.finderplus.ui.contract.SearchEffect.Toast("Reverted \"$label\" on $purged items"))
         refreshAssistStatus()
     }
 
@@ -133,10 +133,10 @@ class SearchViewModel @Inject constructor(
 
     /** Hand the current backlog to the configured judge. Runs in the background; UI stays free. */
     fun startAutoReview() {
-        if (_assistMode.value == ai.rightone.finderplus.index.AssistPrefs.Mode.MANUAL) return
-        ai.rightone.finderplus.index.JudgeWorker.enqueue(appContext)
+        if (_assistMode.value == ai.dusty.finderplus.index.AssistPrefs.Mode.MANUAL) return
+        ai.dusty.finderplus.index.JudgeWorker.enqueue(appContext)
         _effects.tryEmit(
-            ai.rightone.finderplus.ui.contract.SearchEffect.Toast(
+            ai.dusty.finderplus.ui.contract.SearchEffect.Toast(
                 "AI review started — unsure answers stay in your queue",
             )
         )
@@ -158,8 +158,8 @@ class SearchViewModel @Inject constructor(
      * already loaded. Re-querying after every answer would re-run face clustering, which is O(n^2) over
      * every embedded face and takes seconds — far too slow to sit between two taps.
      */
-    private val _review = MutableStateFlow<List<ai.rightone.finderplus.index.ReviewGroup>?>(null)
-    val review: StateFlow<List<ai.rightone.finderplus.index.ReviewGroup>?> = _review
+    private val _review = MutableStateFlow<List<ai.dusty.finderplus.index.ReviewGroup>?>(null)
+    val review: StateFlow<List<ai.dusty.finderplus.index.ReviewGroup>?> = _review
 
     private val _reviewCount = MutableStateFlow(0)
     val reviewCount: StateFlow<Int> = _reviewCount
@@ -189,8 +189,8 @@ class SearchViewModel @Inject constructor(
      * their way through a hundred answers.
      */
     private data class UndoEntry(
-        val group: ai.rightone.finderplus.index.ReviewGroup,
-        val answered: ai.rightone.finderplus.index.ReviewGroups.Answered?,
+        val group: ai.dusty.finderplus.index.ReviewGroup,
+        val answered: ai.dusty.finderplus.index.ReviewGroups.Answered?,
     )
 
     private val undoStack = ArrayDeque<UndoEntry>()
@@ -205,7 +205,7 @@ class SearchViewModel @Inject constructor(
 
     /**
      * Take back the most recent answer or skip: the database reverts (exactly — see
-     * [ai.rightone.finderplus.index.ReviewGroups.undo]) and the question returns to the front of the
+     * [ai.dusty.finderplus.index.ReviewGroups.undo]) and the question returns to the front of the
      * queue so the user can answer it differently.
      */
     fun undoLast() = viewModelScope.launch {
@@ -251,11 +251,11 @@ class SearchViewModel @Inject constructor(
     fun removeLabel(itemId: Long, label: String) = viewModelScope.launch {
         val requeued = runCatching { reviewGroups.removeLabel(itemId, label) }.getOrDefault(0)
         _effects.emit(
-            ai.rightone.finderplus.ui.contract.SearchEffect.Toast(
+            ai.dusty.finderplus.ui.contract.SearchEffect.Toast(
                 if (requeued > 0) "Removed — re-checking $requeued similar" else "Removed",
             )
         )
-        if (requeued > 0) ai.rightone.finderplus.index.IndexWorker.enqueue(appContext)
+        if (requeued > 0) ai.dusty.finderplus.index.IndexWorker.enqueue(appContext)
         _preview.value?.result?.let { if (it.item.id == itemId) openPreview(it) }
         refreshReviewCount()
     }
@@ -288,8 +288,8 @@ class SearchViewModel @Inject constructor(
         refreshReviewCount()
     }
 
-    private val _preview = MutableStateFlow<ai.rightone.finderplus.ui.contract.PreviewUi?>(null)
-    val preview: StateFlow<ai.rightone.finderplus.ui.contract.PreviewUi?> = _preview.asStateFlow()
+    private val _preview = MutableStateFlow<ai.dusty.finderplus.ui.contract.PreviewUi?>(null)
+    val preview: StateFlow<ai.dusty.finderplus.ui.contract.PreviewUi?> = _preview.asStateFlow()
 
     private val _effects = MutableSharedFlow<SearchEffect>(extraBufferCapacity = 8)
     val effects = _effects.asSharedFlow()
@@ -350,8 +350,8 @@ class SearchViewModel @Inject constructor(
      */
     fun openPreview(result: SearchResult) {
         if (_preview.value?.result?.item?.id != result.item.id) {
-            _preview.value = ai.rightone.finderplus.ui.contract.PreviewUi(result, body = result.copyText)
-            recordBallot(result, ai.rightone.finderplus.search.Votes.PREVIEW)
+            _preview.value = ai.dusty.finderplus.ui.contract.PreviewUi(result, body = result.copyText)
+            recordBallot(result, ai.dusty.finderplus.search.Votes.PREVIEW)
         }
         viewModelScope.launch {
             val all = runCatching { contentDao.tagsForItem(result.item.id) }.getOrDefault(emptyList())
@@ -383,7 +383,7 @@ class SearchViewModel @Inject constructor(
     /** Tap = copy the actual media to the clipboard. */
     fun onResultTap(result: SearchResult) {
         _effects.tryEmit(SearchEffect.CopyToClipboard(result))
-        recordBallot(result, ai.rightone.finderplus.search.Votes.TAP)
+        recordBallot(result, ai.dusty.finderplus.search.Votes.TAP)
     }
 
     /**
@@ -393,15 +393,15 @@ class SearchViewModel @Inject constructor(
      * social property of the media, and it flows into the same bounded per-term score the implicit
      * ballots use.
      */
-    fun upvote(result: SearchResult) { recordBallot(result, ai.rightone.finderplus.search.Votes.UP) }
+    fun upvote(result: SearchResult) { recordBallot(result, ai.dusty.finderplus.search.Votes.UP) }
 
-    fun downvote(result: SearchResult) { recordBallot(result, ai.rightone.finderplus.search.Votes.DOWN) }
+    fun downvote(result: SearchResult) { recordBallot(result, ai.dusty.finderplus.search.Votes.DOWN) }
 
     /** Long-press / ↗ = open in the system gallery, seeking to the matched moment for A/V. */
     fun onOpen(result: SearchResult) {
         val seek = result.hits.firstNotNullOfOrNull { it.startMs }
         _effects.tryEmit(SearchEffect.OpenInGallery(result.item.uri, seek, result.item.displayName, result.item.mime))
-        recordBallot(result, ai.rightone.finderplus.search.Votes.OPEN)
+        recordBallot(result, ai.dusty.finderplus.search.Votes.OPEN)
     }
 
     /**
@@ -409,11 +409,11 @@ class SearchViewModel @Inject constructor(
      * every term of the query that found it; the results displayed *above* it get a small debit —
      * they were seen and passed over. Deliberately no UI: the user searches, picks, and the ranking
      * quietly learns which answer that query meant. Ranking-side application is bounded
-     * (see [ai.rightone.finderplus.search.Votes]) so history tunes order without overruling relevance.
+     * (see [ai.dusty.finderplus.search.Votes]) so history tunes order without overruling relevance.
      */
     private fun recordBallot(chosen: SearchResult, weight: Float) = viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
         runCatching {
-            val terms = ai.rightone.finderplus.search.Votes.terms(query.value)
+            val terms = ai.dusty.finderplus.search.Votes.terms(query.value)
             if (terms.isEmpty()) return@runCatching
             val now = System.currentTimeMillis()
             val dao = voteDao
@@ -421,8 +421,8 @@ class SearchViewModel @Inject constructor(
                 for (t in terms) runCatching {
                     dao.accumulate(
                         t, itemId, delta, now,
-                        ai.rightone.finderplus.search.Votes.MIN_SCORE,
-                        ai.rightone.finderplus.search.Votes.MAX_SCORE,
+                        ai.dusty.finderplus.search.Votes.MIN_SCORE,
+                        ai.dusty.finderplus.search.Votes.MAX_SCORE,
                     )
                 }
             }
@@ -432,8 +432,8 @@ class SearchViewModel @Inject constructor(
             val shown = (state.value as? SearchUiState.Results)?.groups?.flatMap { it.results }.orEmpty()
             val idx = shown.indexOfFirst { it.item.id == chosen.item.id }
             if (idx > 0) {
-                shown.take(idx).takeLast(ai.rightone.finderplus.search.Votes.SKIP_WINDOW).forEach {
-                    if (it.item.id != chosen.item.id) deposit(it.item.id, ai.rightone.finderplus.search.Votes.SKIP)
+                shown.take(idx).takeLast(ai.dusty.finderplus.search.Votes.SKIP_WINDOW).forEach {
+                    if (it.item.id != chosen.item.id) deposit(it.item.id, ai.dusty.finderplus.search.Votes.SKIP)
                 }
             }
         }

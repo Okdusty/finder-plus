@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.model
+package ai.dusty.finderplus.model
 
 /** A parsed query: structured filters extracted by the parser plus the residual free [text]. */
 data class SearchQuery(

@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.model
+package ai.dusty.finderplus.model
 
 enum class TagSource {
     LABEL, OBJECT, OCR_KEYWORD, CATEGORY, USER,

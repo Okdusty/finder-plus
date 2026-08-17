@@ -1,10 +1,10 @@
-package ai.rightone.finderplus.media
+package ai.dusty.finderplus.media
 
 import android.content.ContentUris
 import android.content.Context
 import android.provider.MediaStore
-import ai.rightone.finderplus.model.MediaItem
-import ai.rightone.finderplus.model.MediaKind
+import ai.dusty.finderplus.model.MediaItem
+import ai.dusty.finderplus.model.MediaKind
 
 /** A lightweight change-detection digest for the incremental diff — avoids reading full rows. */
 data class MediaDigest(
@@ -126,7 +126,7 @@ class AndroidMediaStoreReader(private val context: Context) : MediaStoreReader {
             place = null,
             bucketId = longOrNull(MediaStore.MediaColumns.BUCKET_ID),
             bucketName = strOrNull(MediaStore.MediaColumns.BUCKET_DISPLAY_NAME),
-            indexState = ai.rightone.finderplus.model.IndexState.NEW,
+            indexState = ai.dusty.finderplus.model.IndexState.NEW,
             pipelineVersion = 0,
         )
     }

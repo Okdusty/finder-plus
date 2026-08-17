@@ -1,11 +1,11 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
-import ai.rightone.finderplus.db.ItemState
-import ai.rightone.finderplus.db.entity.MediaItemEntity
-import ai.rightone.finderplus.db.entity.WorkUnitEntity
-import ai.rightone.finderplus.model.MediaItem
-import ai.rightone.finderplus.model.MediaKind
-import ai.rightone.finderplus.model.Pass
+import ai.dusty.finderplus.db.ItemState
+import ai.dusty.finderplus.db.entity.MediaItemEntity
+import ai.dusty.finderplus.db.entity.WorkUnitEntity
+import ai.dusty.finderplus.model.MediaItem
+import ai.dusty.finderplus.model.MediaKind
+import ai.dusty.finderplus.model.Pass
 
 /**
  * [generation] MUST be the value from the MediaStore digest. Persisting 0 here made every subsequent

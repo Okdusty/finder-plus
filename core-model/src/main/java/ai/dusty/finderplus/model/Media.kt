@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.model
+package ai.dusty.finderplus.model
 
 /** The three media families finder+ indexes. Ordinals are persisted in the DB — do not reorder. */
 enum class MediaKind { IMAGE, VIDEO, AUDIO }

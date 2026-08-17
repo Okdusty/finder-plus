@@ -1,16 +1,16 @@
-package ai.rightone.finderplus.di
+package ai.dusty.finderplus.di
 
 import android.content.Context
-import ai.rightone.finderplus.db.FinderDatabase
-import ai.rightone.finderplus.db.WorkLedger
-import ai.rightone.finderplus.db.dao.ContentDao
-import ai.rightone.finderplus.db.dao.EmbeddingDao
-import ai.rightone.finderplus.db.dao.FtsDao
-import ai.rightone.finderplus.db.dao.IndexRunDao
-import ai.rightone.finderplus.db.dao.MediaItemDao
-import ai.rightone.finderplus.db.dao.WorkUnitDao
-import ai.rightone.finderplus.db.vector.BruteForceVectorStore
-import ai.rightone.finderplus.db.vector.VectorStore
+import ai.dusty.finderplus.db.FinderDatabase
+import ai.dusty.finderplus.db.WorkLedger
+import ai.dusty.finderplus.db.dao.ContentDao
+import ai.dusty.finderplus.db.dao.EmbeddingDao
+import ai.dusty.finderplus.db.dao.FtsDao
+import ai.dusty.finderplus.db.dao.IndexRunDao
+import ai.dusty.finderplus.db.dao.MediaItemDao
+import ai.dusty.finderplus.db.dao.WorkUnitDao
+import ai.dusty.finderplus.db.vector.BruteForceVectorStore
+import ai.dusty.finderplus.db.vector.VectorStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,7 +29,7 @@ object DbModule {
     @Provides fun workUnitDao(db: FinderDatabase): WorkUnitDao = db.workUnitDao()
     @Provides fun indexRunDao(db: FinderDatabase): IndexRunDao = db.indexRunDao()
     @Provides fun contentDao(db: FinderDatabase): ContentDao = db.contentDao()
-    @Provides fun voteDao(db: FinderDatabase): ai.rightone.finderplus.db.dao.VoteDao = db.voteDao()
+    @Provides fun voteDao(db: FinderDatabase): ai.dusty.finderplus.db.dao.VoteDao = db.voteDao()
     @Provides fun embeddingDao(db: FinderDatabase): EmbeddingDao = db.embeddingDao()
     @Provides fun ftsDao(db: FinderDatabase): FtsDao = db.ftsDao()
 

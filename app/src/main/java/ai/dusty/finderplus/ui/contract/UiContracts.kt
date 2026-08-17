@@ -1,10 +1,10 @@
-package ai.rightone.finderplus.ui.contract
+package ai.dusty.finderplus.ui.contract
 
-import ai.rightone.finderplus.model.IndexProgress
-import ai.rightone.finderplus.model.MediaKind
-import ai.rightone.finderplus.model.ModelRole
-import ai.rightone.finderplus.model.SearchResult
-import ai.rightone.finderplus.model.Tag
+import ai.dusty.finderplus.model.IndexProgress
+import ai.dusty.finderplus.model.MediaKind
+import ai.dusty.finderplus.model.ModelRole
+import ai.dusty.finderplus.model.SearchResult
+import ai.dusty.finderplus.model.Tag
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 

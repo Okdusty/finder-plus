@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.ui.widget
+package ai.dusty.finderplus.ui.widget
 
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver

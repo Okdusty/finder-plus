@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import android.app.Notification
 import android.content.Context
@@ -31,7 +31,7 @@ class VaultWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted params: WorkerParameters,
     private val engine: VaultEngine,
-    private val db: ai.rightone.finderplus.db.FinderDatabase,
+    private val db: ai.dusty.finderplus.db.FinderDatabase,
 ) : CoroutineWorker(appContext, params) {
 
     override suspend fun getForegroundInfo(): ForegroundInfo =
@@ -85,6 +85,13 @@ class VaultWorker @AssistedInject constructor(
             return Result.success()
         }
 
+        if (!restore && !dry &&
+            !ai.dusty.finderplus.media.VaultCrypto.isRecoveryKeySaved(applicationContext)
+        ) {
+            log("REFUSED hide: save a recovery key first — uninstall would destroy hidden files")
+            return Result.success()
+        }
+
         val report = if (restore) {
             log("restore starting from ${engine.vaultRoot(applicationContext)}")
             engine.restore(applicationContext) { done, total -> log("restore progress $done/$total") }
@@ -106,7 +113,7 @@ class VaultWorker @AssistedInject constructor(
     }
 
     private fun selfTest() {
-        ai.rightone.finderplus.media.VaultCrypto.init(applicationContext)
+        ai.dusty.finderplus.media.VaultCrypto.init(applicationContext)
         val dir = java.io.File(applicationContext.cacheDir, "vault-selftest").apply { mkdirs() }
         val plain = java.io.File(dir, "plain.bin")
         val blob = java.io.File(dir, "blob.fpv")
@@ -116,22 +123,22 @@ class VaultWorker @AssistedInject constructor(
             val src = ByteArray(3 * 1024 * 1024) { ((it * 31 + it / 977) % 251).toByte() }
             plain.writeBytes(src)
 
-            if (!ai.rightone.finderplus.media.VaultCrypto.encryptInto(plain, blob)) {
+            if (!ai.dusty.finderplus.media.VaultCrypto.encryptInto(plain, blob)) {
                 log("SELFTEST FAILED: encryption did not verify"); return
             }
             if (readBytes(blob, 4).contentEquals(src.copyOf(4))) {
                 log("SELFTEST FAILED: ciphertext starts with plaintext"); return
             }
-            val roundTrip = ai.rightone.finderplus.media.VaultCrypto.openDecrypting(blob).use { it.readBytes() }
+            val roundTrip = ai.dusty.finderplus.media.VaultCrypto.openDecrypting(blob).use { it.readBytes() }
             if (!roundTrip.contentEquals(src)) {
                 log("SELFTEST FAILED: sequential decrypt mismatch (${roundTrip.size} vs ${src.size})"); return
             }
-            if (ai.rightone.finderplus.media.VaultCrypto.plaintextSize(blob) != src.size.toLong()) {
+            if (ai.dusty.finderplus.media.VaultCrypto.plaintextSize(blob) != src.size.toLong()) {
                 log("SELFTEST FAILED: size header wrong"); return
             }
 
             // Random access at deliberately unaligned offsets — the seek path thumbnails depend on.
-            val ds = ai.rightone.finderplus.media.VaultCrypto.dataSource(blob)
+            val ds = ai.dusty.finderplus.media.VaultCrypto.dataSource(blob)
             for (pos in listOf(0L, 1L, 15L, 16L, 4095L, 65_537L, src.size - 100L)) {
                 val n = minOf(1000, (src.size - pos).toInt())
                 val buf = ByteArray(n)
@@ -153,7 +160,7 @@ class VaultWorker @AssistedInject constructor(
     private fun readBytes(f: java.io.File, n: Int): ByteArray = f.inputStream().use { it.readNBytes(n) }
 
     private suspend fun verifyVault() {
-        ai.rightone.finderplus.media.VaultCrypto.init(applicationContext)
+        ai.dusty.finderplus.media.VaultCrypto.init(applicationContext)
         val rows = db.mediaItemDao().vaulted()
         var ok = 0; var missing = 0; var bad = 0; var unknown = 0; var repaired = 0; var purged = 0
         val badNames = ArrayList<String>()
@@ -184,9 +191,9 @@ class VaultWorker @AssistedInject constructor(
                 }
             }
             val head = runCatching {
-                ai.rightone.finderplus.media.VaultCrypto.openDecrypting(f).use { it.readNBytes(16) }
+                ai.dusty.finderplus.media.VaultCrypto.openDecrypting(f).use { it.readNBytes(16) }
             }.getOrNull()
-            val size = runCatching { ai.rightone.finderplus.media.VaultCrypto.plaintextSize(f) }.getOrDefault(0L)
+            val size = runCatching { ai.dusty.finderplus.media.VaultCrypto.plaintextSize(f) }.getOrDefault(0L)
             when {
                 head == null || size <= 0L -> { bad++; badNames += "UNREADABLE ${row.display_name}" }
                 looksLikeMedia(head) -> ok++
@@ -206,21 +213,21 @@ class VaultWorker @AssistedInject constructor(
      * gallery could quietly become "the user can no longer get at their own files" — so it is
      * checked with a real file rather than assumed from the config.
      */
-    private fun verifyHandOff(row: ai.rightone.finderplus.db.entity.MediaItemEntity?) {
+    private fun verifyHandOff(row: ai.dusty.finderplus.db.entity.MediaItemEntity?) {
         if (row == null) { log("HANDOFF: nothing vaulted to check"); return }
         runCatching {
             val blob = java.io.File(android.net.Uri.parse(row.content_uri).path!!)
             val dir = java.io.File(applicationContext.cacheDir, "vault-open").apply { mkdirs() }
             dir.listFiles()?.forEach { it.delete() }
             val staged = java.io.File(dir, (row.display_name ?: "media").replace(Regex("[^A-Za-z0-9._-]"), "_").takeLast(96))
-            ai.rightone.finderplus.media.VaultCrypto.openDecrypting(blob).use { input ->
+            ai.dusty.finderplus.media.VaultCrypto.openDecrypting(blob).use { input ->
                 staged.outputStream().use { out -> input.copyTo(out, 1 shl 16) }
             }
             val head = staged.inputStream().use { it.readNBytes(16) }
             val uri = androidx.core.content.FileProvider.getUriForFile(
                 applicationContext, "${applicationContext.packageName}.clips", staged,
             )
-            val sane = looksLikeMedia(head) && staged.length() == ai.rightone.finderplus.media.VaultCrypto.plaintextSize(blob)
+            val sane = looksLikeMedia(head) && staged.length() == ai.dusty.finderplus.media.VaultCrypto.plaintextSize(blob)
             log(if (sane) "HANDOFF OK: ${staged.length()} bytes decrypted, shared as $uri"
                 else "HANDOFF FAILED: staged ${staged.length()} bytes, header not media")
             dir.listFiles()?.forEach { it.delete() }

@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.speech
+package ai.dusty.finderplus.speech
 
 import android.graphics.Bitmap
 import java.io.File

@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -18,9 +18,9 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import ai.rightone.finderplus.model.IndexProgress
-import ai.rightone.finderplus.model.RunStatus
-import ai.rightone.finderplus.model.Trigger
+import ai.dusty.finderplus.model.IndexProgress
+import ai.dusty.finderplus.model.RunStatus
+import ai.dusty.finderplus.model.Trigger
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -42,7 +42,7 @@ class IndexWorker @AssistedInject constructor(
     @Assisted params: WorkerParameters,
     private val orchestrator: IndexOrchestrator,
     private val power: PowerPolicy,
-    private val db: ai.rightone.finderplus.db.FinderDatabase,
+    private val db: ai.dusty.finderplus.db.FinderDatabase,
     private val assistPrefs: AssistPrefs,
 ) : CoroutineWorker(appContext, params) {
 
@@ -58,7 +58,7 @@ class IndexWorker @AssistedInject constructor(
             // worker is the one thing guaranteed to run after any reset, so it owns the check.
             runCatching {
                 if (db.labelPrototypeDao().countByOrigin(
-                        ai.rightone.finderplus.db.entity.LabelPrototypeEntity.ORIGIN_SEED) == 0) {
+                        ai.dusty.finderplus.db.entity.LabelPrototypeEntity.ORIGIN_SEED) == 0) {
                     android.util.Log.i(TAG, "seed vocabulary empty — enqueueing VocabularySeedWorker")
                     VocabularySeedWorker.enqueue(applicationContext)
                 }

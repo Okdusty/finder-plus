@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.model
+package ai.dusty.finderplus.model
 
 /** Which pipeline role a downloadable model fills. Maps to [RequiredModel] for residency. */
 enum class ModelRole { ASR, ASR_PROJECTOR, ASR_WHISPER, CLIP_IMAGE, CLIP_TEXT, TEXT_EMBEDDER, LABELER, FACE_DETECTOR, OCR_DATA, TOKENIZER, VAD, VLM, VLM_PROJECTOR, DETECTOR }

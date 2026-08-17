@@ -1,10 +1,10 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
-import ai.rightone.finderplus.db.FinderDatabase
-import ai.rightone.finderplus.db.entity.LabelPrototypeEntity
-import ai.rightone.finderplus.db.vector.Vecs
-import ai.rightone.finderplus.model.EmbeddingKind
-import ai.rightone.finderplus.vision.ClipTextEncoder
+import ai.dusty.finderplus.db.FinderDatabase
+import ai.dusty.finderplus.db.entity.LabelPrototypeEntity
+import ai.dusty.finderplus.db.vector.Vecs
+import ai.dusty.finderplus.model.EmbeddingKind
+import ai.dusty.finderplus.vision.ClipTextEncoder
 import javax.inject.Inject
 import javax.inject.Singleton
 

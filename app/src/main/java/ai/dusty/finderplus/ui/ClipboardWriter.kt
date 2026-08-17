@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.ui
+package ai.dusty.finderplus.ui
 
 import android.content.ClipData
 import android.content.ClipDescription
@@ -6,8 +6,8 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.net.Uri
 import androidx.core.content.FileProvider
-import ai.rightone.finderplus.model.MediaKind
-import ai.rightone.finderplus.model.SearchResult
+import ai.dusty.finderplus.model.MediaKind
+import ai.dusty.finderplus.model.SearchResult
 import java.io.File
 
 /**
@@ -30,7 +30,7 @@ class ClipboardWriter(private val context: Context) {
             if (shareUri == null) {
                 // Fall back to the source URI — but never hand out a raw vault blob, which the
                 // receiving app would paste as unreadable ciphertext.
-                if (ai.rightone.finderplus.media.VaultCrypto.isVaultFile(Uri.parse(item.uri).path)) {
+                if (ai.dusty.finderplus.media.VaultCrypto.isVaultFile(Uri.parse(item.uri).path)) {
                     return "Couldn't copy $label"
                 }
                 setClip(clipOf(label, mime, Uri.parse(item.uri)))
@@ -64,7 +64,7 @@ class ClipboardWriter(private val context: Context) {
         val safeName = label.replace(Regex("[^A-Za-z0-9._-]"), "_").takeLast(96).ifEmpty { "media" }
         val target = File(dir, safeName)
         // Vaulted media decrypts on the way out: the clipboard must carry the picture, not ciphertext.
-        ai.rightone.finderplus.media.VaultIO.openInputStream(context, source.toString())?.use { input ->
+        ai.dusty.finderplus.media.VaultIO.openInputStream(context, source.toString())?.use { input ->
             target.outputStream().use { output -> input.copyTo(output, DEFAULT_BUFFER_SIZE) }
         } ?: return null
         if (!target.exists() || target.length() == 0L) return null

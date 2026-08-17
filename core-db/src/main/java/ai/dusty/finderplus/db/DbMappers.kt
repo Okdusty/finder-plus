@@ -1,9 +1,9 @@
-package ai.rightone.finderplus.db
+package ai.dusty.finderplus.db
 
-import ai.rightone.finderplus.db.entity.MediaItemEntity
-import ai.rightone.finderplus.model.IndexState
-import ai.rightone.finderplus.model.MediaItem
-import ai.rightone.finderplus.model.MediaKind
+import ai.dusty.finderplus.db.entity.MediaItemEntity
+import ai.dusty.finderplus.model.IndexState
+import ai.dusty.finderplus.model.MediaItem
+import ai.dusty.finderplus.model.MediaKind
 
 /** Public entity → domain mapping, shared by the search and index engines. */
 fun MediaItemEntity.toMediaItem(): MediaItem = MediaItem(

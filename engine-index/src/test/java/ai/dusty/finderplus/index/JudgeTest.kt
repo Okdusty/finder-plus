@@ -1,6 +1,6 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
-import ai.rightone.finderplus.model.TagSource
+import ai.dusty.finderplus.model.TagSource
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 

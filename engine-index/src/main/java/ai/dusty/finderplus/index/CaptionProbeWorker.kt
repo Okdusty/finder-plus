@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import android.app.Notification
 import android.content.Context
@@ -10,8 +10,8 @@ import androidx.work.ForegroundInfo
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import ai.rightone.finderplus.db.FinderDatabase
-import ai.rightone.finderplus.model.RequiredModel
+import ai.dusty.finderplus.db.FinderDatabase
+import ai.dusty.finderplus.model.RequiredModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -27,7 +27,7 @@ class CaptionProbeWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted params: WorkerParameters,
     private val db: FinderDatabase,
-    private val captioner: ai.rightone.finderplus.speech.VlmCaptioner,
+    private val captioner: ai.dusty.finderplus.speech.VlmCaptioner,
     private val coordinator: ModelCoordinator,
 ) : CoroutineWorker(appContext, params) {
 

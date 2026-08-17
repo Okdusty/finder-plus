@@ -1,20 +1,20 @@
-package ai.rightone.finderplus.index
+package ai.dusty.finderplus.index
 
 import androidx.room.withTransaction
-import ai.rightone.finderplus.db.FinderDatabase
-import ai.rightone.finderplus.db.entity.DocumentEntity
-import ai.rightone.finderplus.db.entity.EmbeddingEntity
-import ai.rightone.finderplus.db.entity.FaceEntity
-import ai.rightone.finderplus.db.entity.SegmentEntity
-import ai.rightone.finderplus.db.entity.TagEntity
-import ai.rightone.finderplus.db.vector.Vecs
-import ai.rightone.finderplus.index.pass.PartialResult
-import ai.rightone.finderplus.index.pass.PassContext
-import ai.rightone.finderplus.index.work.Checkpoint
-import ai.rightone.finderplus.index.work.Checkpoints
-import ai.rightone.finderplus.model.DocSource
-import ai.rightone.finderplus.model.EmbeddingKind
-import ai.rightone.finderplus.model.TagSource
+import ai.dusty.finderplus.db.FinderDatabase
+import ai.dusty.finderplus.db.entity.DocumentEntity
+import ai.dusty.finderplus.db.entity.EmbeddingEntity
+import ai.dusty.finderplus.db.entity.FaceEntity
+import ai.dusty.finderplus.db.entity.SegmentEntity
+import ai.dusty.finderplus.db.entity.TagEntity
+import ai.dusty.finderplus.db.vector.Vecs
+import ai.dusty.finderplus.index.pass.PartialResult
+import ai.dusty.finderplus.index.pass.PassContext
+import ai.dusty.finderplus.index.work.Checkpoint
+import ai.dusty.finderplus.index.work.Checkpoints
+import ai.dusty.finderplus.model.DocSource
+import ai.dusty.finderplus.model.EmbeddingKind
+import ai.dusty.finderplus.model.TagSource
 
 /**
  * Per-unit [PassContext]. Each [emit] persists the result rows AND advances the work-unit checkpoint

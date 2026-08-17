@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.ui.settings
+package ai.dusty.finderplus.ui.settings
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -6,7 +6,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * DESIGN-ONLY STUB — the dialog-themed onboarding/settings sheet is specified in docs/ui/WIREFRAMES.md
- * §3 and binds to [ai.rightone.finderplus.ui.contract.SettingsUiState] / SettingsViewModel. Rendering
+ * §3 and binds to [ai.dusty.finderplus.ui.contract.SettingsUiState] / SettingsViewModel. Rendering
  * is the next phase.
  *
  * Implementation plan (next phase, Compose):

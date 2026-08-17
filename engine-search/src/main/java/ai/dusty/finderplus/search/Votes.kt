@@ -1,4 +1,4 @@
-package ai.rightone.finderplus.search
+package ai.dusty.finderplus.search
 
 import kotlin.math.tanh
 
