@@ -42,7 +42,7 @@ class IndexControlReceiver : BroadcastReceiver() {
                 }
             }
             // Lets indexing be kicked off without taking over the screen (adb, automation, tests):
-            //   adb shell am broadcast -a ai.rightone.finderplus.action.START_INDEX -p <pkg>
+            //   adb shell am broadcast -a ai.dusty.finderplus.action.START_INDEX -p <pkg>
             ACTION_START -> IndexWorker.enqueue(appContext, Trigger.MANUAL)
 
             // Debug affordance: transcribe ONE A/V file now and log the result, so speech quality can
@@ -120,19 +120,19 @@ class IndexControlReceiver : BroadcastReceiver() {
     }
 
     companion object {
-        const val ACTION_STOP = "ai.rightone.finderplus.action.STOP_INDEX"
-        const val ACTION_START = "ai.rightone.finderplus.action.START_INDEX"
-        const val ACTION_TEST_ASR = "ai.rightone.finderplus.action.TEST_ASR"
-        const val ACTION_VAULT_HIDE = "ai.rightone.finderplus.action.VAULT_HIDE"
-        const val ACTION_VAULT_RESTORE = "ai.rightone.finderplus.action.VAULT_RESTORE"
-        const val ACTION_PROBE_BACKENDS = "ai.rightone.finderplus.action.PROBE_BACKENDS"
-        const val ACTION_PROBE_CLIP = "ai.rightone.finderplus.action.PROBE_CLIP"
-        const val ACTION_PROBE_CAPTION = "ai.rightone.finderplus.action.PROBE_CAPTION"
-        const val ACTION_JUDGE = "ai.rightone.finderplus.action.JUDGE"
-        const val ACTION_SEED_VOCAB = "ai.rightone.finderplus.action.SEED_VOCAB"
-        const val ACTION_CLUSTER = "ai.rightone.finderplus.action.CLUSTER"
-        const val ACTION_RESET_DB = "ai.rightone.finderplus.action.RESET_DB"
-        const val ACTION_BENCH_CLIP = "ai.rightone.finderplus.action.BENCH_CLIP"
+        const val ACTION_STOP = "ai.dusty.finderplus.action.STOP_INDEX"
+        const val ACTION_START = "ai.dusty.finderplus.action.START_INDEX"
+        const val ACTION_TEST_ASR = "ai.dusty.finderplus.action.TEST_ASR"
+        const val ACTION_VAULT_HIDE = "ai.dusty.finderplus.action.VAULT_HIDE"
+        const val ACTION_VAULT_RESTORE = "ai.dusty.finderplus.action.VAULT_RESTORE"
+        const val ACTION_PROBE_BACKENDS = "ai.dusty.finderplus.action.PROBE_BACKENDS"
+        const val ACTION_PROBE_CLIP = "ai.dusty.finderplus.action.PROBE_CLIP"
+        const val ACTION_PROBE_CAPTION = "ai.dusty.finderplus.action.PROBE_CAPTION"
+        const val ACTION_JUDGE = "ai.dusty.finderplus.action.JUDGE"
+        const val ACTION_SEED_VOCAB = "ai.dusty.finderplus.action.SEED_VOCAB"
+        const val ACTION_CLUSTER = "ai.dusty.finderplus.action.CLUSTER"
+        const val ACTION_RESET_DB = "ai.dusty.finderplus.action.RESET_DB"
+        const val ACTION_BENCH_CLIP = "ai.dusty.finderplus.action.BENCH_CLIP"
         private const val TAG = "finderAsr"
         private const val NOTIF_ID = 4201
     }

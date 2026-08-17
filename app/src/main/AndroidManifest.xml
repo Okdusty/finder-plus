@@ -26,7 +26,7 @@
         android:usesCleartextTraffic="true"
         android:name=".FinderApp"
         android:allowBackup="false"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.FinderPlus.Translucent">
 
@@ -110,19 +110,19 @@
             android:name="ai.rightone.finderplus.index.IndexControlReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="ai.rightone.finderplus.action.STOP_INDEX" />
-                <action android:name="ai.rightone.finderplus.action.START_INDEX" />
-                <action android:name="ai.rightone.finderplus.action.TEST_ASR" />
-                <action android:name="ai.rightone.finderplus.action.PROBE_BACKENDS" />
-                <action android:name="ai.rightone.finderplus.action.PROBE_CLIP" />
-                <action android:name="ai.rightone.finderplus.action.PROBE_CAPTION" />
-                <action android:name="ai.rightone.finderplus.action.JUDGE" />
-                <action android:name="ai.rightone.finderplus.action.SEED_VOCAB" />
-                <action android:name="ai.rightone.finderplus.action.VAULT_HIDE" />
-                <action android:name="ai.rightone.finderplus.action.VAULT_RESTORE" />
-                <action android:name="ai.rightone.finderplus.action.CLUSTER" />
-                <action android:name="ai.rightone.finderplus.action.RESET_DB" />
-                <action android:name="ai.rightone.finderplus.action.BENCH_CLIP" />
+                <action android:name="ai.dusty.finderplus.action.STOP_INDEX" />
+                <action android:name="ai.dusty.finderplus.action.START_INDEX" />
+                <action android:name="ai.dusty.finderplus.action.TEST_ASR" />
+                <action android:name="ai.dusty.finderplus.action.PROBE_BACKENDS" />
+                <action android:name="ai.dusty.finderplus.action.PROBE_CLIP" />
+                <action android:name="ai.dusty.finderplus.action.PROBE_CAPTION" />
+                <action android:name="ai.dusty.finderplus.action.JUDGE" />
+                <action android:name="ai.dusty.finderplus.action.SEED_VOCAB" />
+                <action android:name="ai.dusty.finderplus.action.VAULT_HIDE" />
+                <action android:name="ai.dusty.finderplus.action.VAULT_RESTORE" />
+                <action android:name="ai.dusty.finderplus.action.CLUSTER" />
+                <action android:name="ai.dusty.finderplus.action.RESET_DB" />
+                <action android:name="ai.dusty.finderplus.action.BENCH_CLIP" />
             </intent-filter>
         </receiver>
 

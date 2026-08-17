@@ -20,7 +20,7 @@ import dagger.assisted.AssistedInject
  * instead of after the hour of queue ahead of the CAPTION tier. The caption pass's failure mode is a
  * silent empty string, which is exactly the kind of thing that must not be discovered at hour three.
  *
- *   adb shell am broadcast -a ai.rightone.finderplus.action.PROBE_CAPTION -p <pkg>
+ *   adb shell am broadcast -a ai.dusty.finderplus.action.PROBE_CAPTION -p <pkg>
  */
 @HiltWorker
 class CaptionProbeWorker @AssistedInject constructor(

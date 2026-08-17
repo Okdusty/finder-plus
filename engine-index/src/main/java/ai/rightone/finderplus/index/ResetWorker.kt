@@ -23,7 +23,7 @@ import dagger.assisted.AssistedInject
  * before the scan would fail on the foreign key; restoring them after the full index would leave the
  * early passes working from incomplete evidence.
  *
- *   adb shell am broadcast -a ai.rightone.finderplus.action.RESET_DB -p <pkg>
+ *   adb shell am broadcast -a ai.dusty.finderplus.action.RESET_DB -p <pkg>
  *   adb shell am broadcast -a ...action.RESET_DB -p <pkg> --ez keepLabels false
  */
 @HiltWorker

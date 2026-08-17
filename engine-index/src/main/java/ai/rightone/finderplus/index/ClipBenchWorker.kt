@@ -27,7 +27,7 @@ import dagger.assisted.AssistedInject
  * repeatable benchmark that touches no state is the only way to A/B a change like a cpuset move without
  * re-running a six-hour index to find out.
  *
- *   adb shell am broadcast -a ai.rightone.finderplus.action.BENCH_CLIP -p <pkg>
+ *   adb shell am broadcast -a ai.dusty.finderplus.action.BENCH_CLIP -p <pkg>
  *   adb shell am broadcast -a ...action.BENCH_CLIP -p <pkg> --ez boost true --ei n 24
  */
 @HiltWorker

@@ -26,7 +26,7 @@ import dagger.assisted.AssistedInject
  * Runs as a foreground worker rather than in a BroadcastReceiver: loading a ~1 GB model plus inference
  * takes far longer than a receiver's ~10 s budget, which ANR'd and got the process killed.
  *
- *   adb shell am broadcast -a ai.rightone.finderplus.action.TEST_ASR -p <pkg> --es kind audio
+ *   adb shell am broadcast -a ai.dusty.finderplus.action.TEST_ASR -p <pkg> --es kind audio
  */
 @HiltWorker
 class AsrProbeWorker @AssistedInject constructor(

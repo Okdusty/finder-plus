@@ -3,8 +3,8 @@
   Debug-only override: makes the index control receiver reachable from adb, so a rescan can be driven
   without taking over the screen:
 
-      adb shell am broadcast -a ai.rightone.finderplus.action.START_INDEX -p ai.rightone.finderplus
-      adb shell am broadcast -a ai.rightone.finderplus.action.STOP_INDEX  -p ai.rightone.finderplus
+      adb shell am broadcast -a ai.dusty.finderplus.action.START_INDEX -p ai.dusty.finderplus
+      adb shell am broadcast -a ai.dusty.finderplus.action.STOP_INDEX  -p ai.dusty.finderplus
 
   The release manifest keeps exported="false" so nothing outside the app can start or stop indexing.
 -->

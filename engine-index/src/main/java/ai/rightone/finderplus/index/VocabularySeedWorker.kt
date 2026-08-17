@@ -26,7 +26,7 @@ import dagger.assisted.AssistedInject
  * Interrupting it is safe and loses nothing: a seeded label is skipped on the next run, so the
  * prototype table doubles as the checkpoint.
  *
- *   adb shell am broadcast -a ai.rightone.finderplus.action.SEED_VOCAB -p <pkg>
+ *   adb shell am broadcast -a ai.dusty.finderplus.action.SEED_VOCAB -p <pkg>
  */
 @HiltWorker
 class VocabularySeedWorker @AssistedInject constructor(

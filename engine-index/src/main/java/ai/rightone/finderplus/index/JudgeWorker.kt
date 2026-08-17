@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
  * teaches the prototypes; judged items get their caption rewritten by the same stronger model — the
  * SmolVLM caption was written by a model an order of magnitude smaller.
  *
- *   adb shell am broadcast -a ai.rightone.finderplus.action.JUDGE -p <pkg>
+ *   adb shell am broadcast -a ai.dusty.finderplus.action.JUDGE -p <pkg>
  */
 @HiltWorker
 class JudgeWorker @AssistedInject constructor(

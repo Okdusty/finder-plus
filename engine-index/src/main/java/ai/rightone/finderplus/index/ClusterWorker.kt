@@ -21,7 +21,7 @@ import dagger.assisted.AssistedInject
  * partial index fragment, because the items that belong to a group may simply not be embedded yet, and
  * the user would be asked to name the same concept again and again as they arrive.
  *
- *   adb shell am broadcast -a ai.rightone.finderplus.action.CLUSTER -p <pkg>
+ *   adb shell am broadcast -a ai.dusty.finderplus.action.CLUSTER -p <pkg>
  */
 @HiltWorker
 class ClusterWorker @AssistedInject constructor(

@@ -14,7 +14,7 @@ android {
     ndkVersion = "29.0.14206865"
 
     defaultConfig {
-        applicationId = "ai.rightone.finderplus"
+        applicationId = "ai.dusty.finderplus"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

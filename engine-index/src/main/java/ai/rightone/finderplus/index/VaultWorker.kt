@@ -18,9 +18,9 @@ import dagger.assisted.AssistedInject
 /**
  * Runs [VaultEngine] off the main thread with a progress notification.
  *
- *   adb shell am broadcast -a ai.rightone.finderplus.action.VAULT_HIDE --ez dry true -p <pkg>
- *   adb shell am broadcast -a ai.rightone.finderplus.action.VAULT_HIDE -p <pkg>
- *   adb shell am broadcast -a ai.rightone.finderplus.action.VAULT_RESTORE -p <pkg>
+ *   adb shell am broadcast -a ai.dusty.finderplus.action.VAULT_HIDE --ez dry true -p <pkg>
+ *   adb shell am broadcast -a ai.dusty.finderplus.action.VAULT_HIDE -p <pkg>
+ *   adb shell am broadcast -a ai.dusty.finderplus.action.VAULT_RESTORE -p <pkg>
  *
  * Requires All-Files access (`MANAGE_EXTERNAL_STORAGE`), grantable without UI via
  * `adb shell appops set <pkg> MANAGE_EXTERNAL_STORAGE allow`. Without it the worker logs and exits

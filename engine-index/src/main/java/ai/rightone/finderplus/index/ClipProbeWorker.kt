@@ -26,7 +26,7 @@ import dagger.assisted.AssistedInject
  * encoding "a photo of a cat" ranks the gallery's cat pictures above its other pictures, which is the
  * only property anything downstream actually depends on.
  *
- *   adb shell am broadcast -a ai.rightone.finderplus.action.PROBE_CLIP -p <pkg>
+ *   adb shell am broadcast -a ai.dusty.finderplus.action.PROBE_CLIP -p <pkg>
  */
 @HiltWorker
 class ClipProbeWorker @AssistedInject constructor(
