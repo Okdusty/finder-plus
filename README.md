@@ -1,26 +1,44 @@
-# finder+
+# Your blazing fast gallery finder
 
-finder+ indexes an Android gallery on the phone and makes it searchable by what is inside the files
+**Finder+** indexes an Android gallery on the phone and makes it searchable by what is inside the files
 rather than by filename. Every image, video and audio file is read once and turned into a block of
 text: ML Kit labels, OCR, YOLOX object classes, face groups, a CLIP vector, and a speech transcript
-for anything with audio. On a 4,926-item gallery running on a Galaxy S24+, typing `dog` returned 49
-photos.
+for anything with audio.<br>
+<div align="center">
+  <b>In action shot</b><br>
+  <sub><i>please dont question my gallery. thanks.</i></sub><br><br>
+<img width="360" height="720" alt="Screenshot_20260810_124224_finder+" src="https://github.com/user-attachments/assets/be92665e-c06c-4324-acc0-b39545a0698c" /></div>
 
 There is no app screen to open. Search is a home-screen widget and a translucent pop-up over whatever
 you were doing. Tapping a result puts the media URI and its extracted text on the clipboard as a
 single clip.
 
+<img width="230" height="157" alt="image" src="https://github.com/user-attachments/assets/0dfcf803-01fa-49c4-a94e-d52293dcdbf6" />
+
+There's an accessibility preference that lets you bind `finder+ search` as a shortcut for much quicker access to your gallery.
+
 ## Download
 
-Grab `app-release.apk` from the [releases page](https://github.com/Okdusty/finder-plus/releases).
+Grab `app-debug.apk` from the [releases page](https://github.com/Okdusty/finder-plus/releases/tag/v0.1).
 
 | | |
 |---|---|
-| Version | 1.0.0-beta |
-| Size | 72 MB |
 | ABI | arm64-v8a only (no x86, no armeabi-v7a) |
 | Android | 8.0 / API 26 and up, built against API 35 |
-| Signature | self-signed `CN=finderplus, O=rightone`, so Play Protect will warn about an unknown developer |
+| Signature | self-signed `CN=finderplus, O=dusty`, so Play Protect will warn about an unknown developer |
+
+Modern phone recommended *(min 6GB)*, Vulkan acceleration is supported. 
+Snapshot releases, do not expect reliable and power tiled app. 
+Can be power hungry when phone is charging, During `Indexing...` or labeling sessions, it's recommended to keep an eye on your phone.
+
+<img width="286" height="433" alt="image" src="https://github.com/user-attachments/assets/08a3937e-a05a-4402-be6b-2253796b5141" />
+
+Then label it, as you want... You can customize it, CLIP will learn based on your labeling, and this will eventually teach the model to auto-label your gallery, locally/privately/wisely.  
+
+<img width="264" height="186" alt="image" src="https://github.com/user-attachments/assets/fc880746-36e2-473e-b4fe-778cd03e6bc9" />
+
+Separation by commas is recommended while labeling; it'll assist in adapting to your gallery quicker.<br>
+Don't go into detail about the media; always keep it brief, don't use full sentences.
 
 ## What runs in the beta
 
