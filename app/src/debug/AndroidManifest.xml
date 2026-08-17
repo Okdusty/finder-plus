@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Debug-only override: makes the index control receiver reachable from adb, so a rescan can be driven
+  without taking over the screen:
+
+      adb shell am broadcast -a ai.rightone.finderplus.action.START_INDEX -p ai.rightone.finderplus
+      adb shell am broadcast -a ai.rightone.finderplus.action.STOP_INDEX  -p ai.rightone.finderplus
+
+  The release manifest keeps exported="false" so nothing outside the app can start or stop indexing.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application>
+        <receiver
+            android:name="ai.rightone.finderplus.index.IndexControlReceiver"
+            android:exported="true"
+            tools:replace="android:exported" />
+    </application>
+</manifest>

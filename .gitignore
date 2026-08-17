@@ -1,0 +1,17 @@
+# Gradle / Android build output
+.gradle/
+.kotlin/
+build/
+.cxx/
+*.iml
+captures/
+
+# Machine-local
+local.properties
+.idea/
+
+# Release signing: keystore and its passwords never leave this machine.
+# Passwords live in ~/.gradle/gradle.properties as finderplus.store.password / finderplus.key.password.
+keys/
+*.jks
+*.keystore

@@ -1,0 +1,519 @@
+# Concept vocabulary — the open-set labels the app recognizes without being taught.
+#
+# This file is DATA, not code: edit it to change what the recognizer knows, ship a
+# different one per deployment, or drop a replacement at files/vocab/concepts.txt on the
+# device to override it at runtime. No rebuild required.
+#
+# Format:
+#   - "# ..."            a comment (ignored)
+#   - "name :: gate"     starts a domain. The gate is the stage-1 caption phrase scored to
+#                        decide whether the domain applies at all.
+#   - "name :: gate :: entity"   marks a domain as named-entity: held to a higher confidence
+#                        floor and only ever proposed (never auto-applied), because a wrong
+#                        name is worse than no name.
+#   - any other line     a concept belonging to the current domain (stage-2 label).
+#
+# Keep concepts naming *content, never medium*: "video call", not "screenshot of a video call".
+# Order is preserved. Concepts and gates may be in any language; they are matched by the CLIP
+# text tower, so they only need to describe the image well.
+
+people :: a photo of a person
+selfie
+group photo
+child
+baby
+couple
+family
+crowd
+person wearing a suit
+person in a wedding dress
+person in sportswear
+person in traditional clothing
+person wearing a uniform
+person wearing a mask
+person with a beard
+person wearing glasses
+person wearing a hat
+person dancing
+person cooking
+person playing a sport
+person playing an instrument
+person holding a baby
+person holding a pet
+person at a desk working
+person on stage speaking
+person swimming
+person riding a bicycle
+
+places :: a photo of a place or building
+beach
+mountain
+forest
+lake
+river
+waterfall
+desert
+snow
+field
+garden
+park
+cave
+island
+cliff
+volcano
+city street
+skyline at night
+highway
+bridge
+tunnel
+harbor
+airport
+train station
+bus station
+parking lot
+gas station
+restaurant
+cafe
+bar
+nightclub
+kitchen
+bedroom
+living room
+bathroom
+office
+classroom
+library
+hospital
+gym
+supermarket
+shopping mall
+market stall
+hotel room
+swimming pool
+stadium
+construction site
+farm
+church
+mosque
+temple
+museum
+amusement park
+playground
+cemetery
+rooftop
+balcony
+staircase
+
+animals :: a photo of an animal
+dog
+cat
+bird
+horse
+cow
+sheep
+goat
+pig
+chicken
+duck
+fish
+shark
+dolphin
+whale
+turtle
+snake
+lizard
+frog
+rabbit
+hamster
+mouse
+squirrel
+deer
+bear
+wolf
+fox
+lion
+tiger
+elephant
+giraffe
+zebra
+monkey
+camel
+butterfly
+bee
+spider
+ant
+insect
+parrot
+owl
+eagle
+penguin
+
+food :: a photo of food or a drink
+pizza
+burger
+sandwich
+salad
+soup
+pasta
+rice dish
+noodles
+grilled meat
+steak
+kebab
+chicken dish
+seafood
+sushi
+eggs
+breakfast
+bread
+pastry
+cake
+cookies
+chocolate
+dessert
+ice cream
+fruit
+vegetables
+cheese
+nuts
+candy
+coffee
+tea
+juice
+smoothie
+cocktail
+beer
+wine
+soft drink
+table full of food
+restaurant dish plated
+street food
+home cooked meal
+
+vehicles :: a photo of a vehicle
+car
+sports car
+classic car
+suv
+van
+pickup truck
+truck
+motorcycle
+scooter
+bicycle
+bus
+tram
+train
+subway train
+airplane
+helicopter
+boat
+sailboat
+ship
+jet ski
+tractor
+car interior
+car engine
+damaged car
+car wheel
+license plate
+
+documents :: a photo of a document or printed text
+receipt
+invoice
+handwritten note
+printed document
+business card
+identity card
+passport
+driver license
+boarding pass
+event ticket
+certificate
+diploma
+prescription
+medical report
+bank statement
+contract
+menu
+poster
+flyer
+brochure
+map
+chart or graph
+whiteboard with writing
+book page
+newspaper page
+magazine page
+qr code
+barcode
+form to fill in
+envelope
+label with text
+
+screen :: a screenshot of a screen
+chat conversation
+social media post
+social media profile
+web page
+video call
+music player
+video game
+spreadsheet
+email
+bank transaction
+calendar
+computer code
+settings menu
+shopping page
+news article
+weather forecast
+meme
+error message
+
+objects :: a photo of an object
+laptop
+desktop computer
+mobile phone
+tablet
+television
+monitor
+camera
+headphones
+keyboard
+mouse
+game controller
+printer
+watch
+book
+backpack
+handbag
+suitcase
+shoes
+clothing
+hat
+sunglasses
+jewelry
+ring
+necklace
+perfume
+cosmetics
+guitar
+piano
+drum kit
+violin
+microphone
+speaker
+bottle
+cup
+plate
+cutlery
+pot
+furniture
+bed
+sofa
+chair
+table
+lamp
+mirror
+clock
+candle
+plant in a pot
+flowers
+toy
+doll
+board game
+ball
+tool
+machine
+money
+credit card
+key
+medicine
+cigarette
+weapon
+fireworks
+balloon
+gift box
+
+events :: a photo of an event or activity
+wedding
+birthday party
+graduation ceremony
+concert
+music festival
+parade
+sports match
+football match
+basketball game
+funeral
+conference presentation
+business meeting
+protest march
+religious ceremony
+camping trip
+hiking trip
+road trip
+beach holiday
+skiing
+surfing
+swimming
+running race
+workout at the gym
+yoga
+cooking
+gardening
+fishing
+hunting
+dancing
+picnic
+shopping
+fishing from a boat
+
+art :: a picture of art or a drawing
+painting
+oil painting
+watercolor painting
+pencil drawing
+sketch
+digital illustration
+anime artwork
+cartoon drawing
+comic book page
+graffiti
+street art
+tattoo
+sculpture
+statue
+pottery
+architectural drawing
+logo design
+abstract art
+
+nature :: a close-up photo of nature
+flower close-up
+leaf
+tree bark
+grass
+moss
+mushroom
+fruit on a tree
+sunset
+sunrise
+clouds
+storm
+rainbow
+lightning
+rain on a window
+snowflakes
+frost
+sand
+rocks
+sea waves
+starry night sky
+the moon
+the sun
+fog
+autumn leaves
+cherry blossom
+
+# Named entities: famous people, landmarks, brands and characters CLIP already knows. Held to a
+# higher confidence floor and only ever proposed. Regionalise freely — this list is a starting point.
+entities :: a photo of a famous person, landmark, or brand logo :: entity
+the Eiffel Tower
+the Statue of Liberty
+the Colosseum
+the Taj Mahal
+the Great Wall of China
+the Pyramids of Giza
+Big Ben
+the Sydney Opera House
+the Golden Gate Bridge
+Mount Fuji
+the Leaning Tower of Pisa
+Stonehenge
+the Brandenburg Gate
+the Sagrada Familia
+Machu Picchu
+the Acropolis
+Hagia Sophia
+the Blue Mosque
+Galata Tower
+the Bosphorus Bridge
+Cappadocia hot air balloons
+Pamukkale travertines
+the Maiden's Tower Istanbul
+Times Square
+the Burj Khalifa
+the Petronas Towers
+Christ the Redeemer
+the Empire State Building
+Tower Bridge
+the Louvre pyramid
+Neuschwanstein Castle
+the Apple logo
+the Google logo
+the Microsoft logo
+the Samsung logo
+the Nike logo
+the Adidas logo
+the Coca-Cola logo
+the Pepsi logo
+the McDonald's logo
+the Starbucks logo
+the Amazon logo
+the Netflix logo
+the YouTube logo
+the Instagram logo
+the WhatsApp logo
+the Facebook logo
+the Tesla logo
+the BMW logo
+the Mercedes-Benz logo
+the Toyota logo
+the Ferrari logo
+the Audi logo
+the Volkswagen logo
+the Turkish Airlines logo
+Mickey Mouse
+Batman
+Superman
+Spider-Man
+Iron Man
+Darth Vader
+Pikachu
+Mario
+Sonic the Hedgehog
+Hello Kitty
+SpongeBob SquarePants
+Homer Simpson
+Shrek
+Harry Potter
+Winnie the Pooh
+Snoopy
+Albert Einstein
+Mahatma Gandhi
+Nelson Mandela
+Martin Luther King Jr
+Mustafa Kemal Atatürk
+Queen Elizabeth II
+Barack Obama
+Donald Trump
+Elon Musk
+Bill Gates
+Steve Jobs
+Cristiano Ronaldo
+Lionel Messi
+Michael Jordan
+Muhammad Ali
+Marilyn Monroe
+Charlie Chaplin
+Michael Jackson
+Freddie Mercury
+The Beatles
+Taylor Swift
+Beyoncé
+Leonardo DiCaprio
+Morgan Freeman
+Keanu Reeves
+Mona Lisa

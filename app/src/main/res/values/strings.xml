@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">finder+</string>
+    <string name="widget_search_hint">Search your gallery…</string>
+    <string name="widget_description">Search your gallery — offline.</string>
+    <string name="shortcut_search">Search</string>
+    <string name="shortcut_private">Private folders</string>
+    <string name="tile_label">finder+ search</string>
+    <string name="access_desc">Opens finder+ search when you use the accessibility button or shortcut gesture. Reads nothing from the screen — it exists only as a launch trigger, and turns itself off after each use.</string>
+</resources>

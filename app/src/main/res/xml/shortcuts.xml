@@ -1,0 +1,22 @@
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="search"
+        android:enabled="true"
+        android:icon="@drawable/ic_finder_glass"
+        android:shortcutShortLabel="@string/shortcut_search">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="ai.rightone.finderplus"
+            android:targetClass="ai.rightone.finderplus.ui.popup.SearchPopupActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="private"
+        android:enabled="true"
+        android:icon="@drawable/ic_finder_glass"
+        android:shortcutShortLabel="@string/shortcut_private">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="ai.rightone.finderplus"
+            android:targetClass="ai.rightone.finderplus.ui.settings.PrivacyActivity" />
+    </shortcut>
+</shortcuts>

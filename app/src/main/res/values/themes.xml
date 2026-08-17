@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Translucent dialog theme: the pop-up + settings float over a dimmed scrim, never a full frame.
+         See docs/ui/WIREFRAMES.md §6 (design tokens). -->
+    <style name="Theme.FinderPlus.Translucent" parent="@android:style/Theme.Material.Dialog.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.72</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+    </style>
+</resources>

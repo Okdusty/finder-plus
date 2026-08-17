@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Media access (Android 13+ granular; legacy fallback ≤ 32). -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Vault: moving files out of MediaStore and serving them afterwards needs all-files access.
+         Granted deliberately (Settings toggle or adb appops), never prompted for casually. -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Network is used ONLY by the optional one-time model downloader; indexing runs offline. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:usesCleartextTraffic="true"
+        android:name=".FinderApp"
+        android:allowBackup="false"
+        android:icon="@android:drawable/ic_menu_search"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.FinderPlus.Translucent">
+
+        <!-- The only launcher-capable component is the translucent search pop-up (also handles the
+             first-run permission grant), so the app never presents a full frame. See docs/ui/WIREFRAMES.md. -->
+        <activity
+            android:name=".ui.popup.SearchPopupActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.FinderPlus.Translucent">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        
+            <!-- Settable as the device assist app: Samsung side-key / home long-press then opens
+                 search from anywhere. Settings > Apps > Choose default apps > Digital assistant app. -->
+            <intent-filter>
+                <action android:name="android.intent.action.ASSIST" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
+</activity>
+
+        <!-- Appears in any gallery's "Open with" / "Share" menu so a specific file can be labelled. -->
+        <activity
+            android:name=".ui.label.LabelActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:label="Label in finder+"
+            android:theme="@style/Theme.FinderPlus.Translucent">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="video/*" />
+                <data android:mimeType="audio/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="video/*" />
+                <data android:mimeType="audio/*" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.settings.PrivacyActivity"
+            android:exported="true"
+            android:label="Private folders"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.FinderPlus.Translucent" />
+
+        <!-- Home-screen widget: search entry + update/stop button + live status. -->
+        <receiver
+            android:name=".ui.widget.FinderWidgetReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/finder_widget_info" />
+        </receiver>
+
+        <!-- Android 14+/15: WorkManager's foreground service must declare the dataSync type so the
+             IndexWorker can call startForeground(FOREGROUND_SERVICE_TYPE_DATA_SYNC). -->
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
+
+        <!-- Notification "Stop" action → cooperative stop + cancel the slice chain. -->
+        <receiver
+            android:name="ai.rightone.finderplus.index.IndexControlReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="ai.rightone.finderplus.action.STOP_INDEX" />
+                <action android:name="ai.rightone.finderplus.action.START_INDEX" />
+                <action android:name="ai.rightone.finderplus.action.TEST_ASR" />
+                <action android:name="ai.rightone.finderplus.action.PROBE_BACKENDS" />
+                <action android:name="ai.rightone.finderplus.action.PROBE_CLIP" />
+                <action android:name="ai.rightone.finderplus.action.PROBE_CAPTION" />
+                <action android:name="ai.rightone.finderplus.action.JUDGE" />
+                <action android:name="ai.rightone.finderplus.action.SEED_VOCAB" />
+                <action android:name="ai.rightone.finderplus.action.VAULT_HIDE" />
+                <action android:name="ai.rightone.finderplus.action.VAULT_RESTORE" />
+                <action android:name="ai.rightone.finderplus.action.CLUSTER" />
+                <action android:name="ai.rightone.finderplus.action.RESET_DB" />
+                <action android:name="ai.rightone.finderplus.action.BENCH_CLIP" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Hands the tapped media's real bytes to the pasting app (clipboard = the image itself). -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.clips"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <!-- WorkManager on-demand initialization; the factory comes from Hilt (see FinderApp). -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+    
+        <service
+            android:name=".ui.QuickSearchTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_finder_glass"
+            android:label="@string/tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".ui.AccessLaunchService"
+            android:exported="true"
+            android:label="@string/tile_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/access_shortcut" />
+        </service>
+    </application>
+</manifest>
