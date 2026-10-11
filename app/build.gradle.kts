@@ -17,8 +17,8 @@ android {
         applicationId = "ai.dusty.finderplus"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0-beta"
+        versionCode = 2
+        versionName = "1.0.0-beta.2"
         // Target device (Exynos 2400) is arm64-only; shipping x86/x86_64/armeabi-v7a copies of the
         // ML Kit, ONNX and llama.cpp .so files was pure dead weight in the APK.
         ndk { abiFilters += listOf("arm64-v8a") }
