@@ -1,0 +1,42 @@
+package ai.dusty.finderplus.search
+
+/**
+ * Reciprocal Rank Fusion across the search legs. RRF is scale-free, so it robustly combines FTS BM25
+ * ranks with cosine ranks without normalizing their different score ranges. A higher fused score is
+ * better; the constant k damps the contribution of low-ranked items. See docs/design/04-SEARCH.md §5.
+ */
+interface RankFuser {
+    /** @param weights per-leg multipliers; defaults to 1.0 for any leg without one. */
+    fun fuse(legs: List<List<Long>>, weights: List<Float> = emptyList()): List<FusedItem>
+}
+
+data class FusedItem(val itemId: Long, val score: Float, val agreeingLegs: Int)
+
+/** [fixedK] and [fixedAgreement] override the settings; tests pass them, the app leaves them to the settings. */
+class DefaultRankFuser(private val fixedK: Int? = null, private val fixedAgreement: Float? = null) : RankFuser {
+
+    override fun fuse(legs: List<List<Long>>, weights: List<Float>): List<FusedItem> {
+        val k = fixedK ?: ai.dusty.finderplus.settings.Settings[ai.dusty.finderplus.settings.EmbeddingSettings.RANK_DAMPING].toInt()
+        val agreement = fixedAgreement
+            ?: ai.dusty.finderplus.settings.Settings[ai.dusty.finderplus.settings.EmbeddingSettings.AGREEMENT].toFloat()
+        val score = HashMap<Long, Float>()
+        val agree = HashMap<Long, Int>()
+        for ((legIndex, leg) in legs.withIndex()) {
+            // Legs are NOT equally trustworthy. A keyword hit means the word is literally present; a
+            // vector hit means something was merely nearest, and every vector leg returns its top-N
+            // however poor the match. Weighting keeps a plausible-but-wrong neighbour from outranking
+            // an exact match, which is the single most noticeable failure in a hybrid ranker.
+            val w = weights.getOrElse(legIndex) { 1f }
+            leg.forEachIndexed { rank, id ->
+                score[id] = (score[id] ?: 0f) + w / (k + rank + 1)
+                agree[id] = (agree[id] ?: 0) + 1
+            }
+        }
+        return score.entries
+            .sortedByDescending { it.value }
+            .map { FusedItem(it.key, it.value, agree[it.key] ?: 1) }
+            // Agreement across independent legs is strong evidence: an item found by both keywords and
+            // visual similarity is far more likely to be what was meant than one found by either alone.
+            .sortedByDescending { it.score * (1f + agreement * (it.agreeingLegs - 1)) }
+    }
+}

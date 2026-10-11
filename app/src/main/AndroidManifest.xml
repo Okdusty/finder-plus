@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Media access (Android 13+ granular; legacy fallback ≤ 32). -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Vault: moving files out of MediaStore and serving them afterwards needs all-files access.
+         Requested only when the user turns hiding on, never at first launch. -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Asks once, at setup, to be exempt from battery optimization so indexing can run for hours. -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <!-- Network is used only for optional model downloads and the optional cloud/Ollama review
+         judge; indexing runs offline. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- The apps that can open each kind of media, for the "chosen app" settings. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="video/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="audio/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="image/*" />
+        </intent>
+    </queries>
+
+    <application
+        android:usesCleartextTraffic="true"
+        android:name=".FinderApp"
+        android:allowBackup="false"
+        android:hasFragileUserData="true"
+        android:localeConfig="@xml/locales_config"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.FinderPlus.Translucent">
+
+        <!-- The only launcher-capable component is the translucent search pop-up (also handles the
+             first-run permission grant), so the app never presents a full frame. See docs/ui/WIREFRAMES.md. -->
+        <activity
+            android:name=".ui.popup.SearchPopupActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.FinderPlus.Translucent">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        
+            <!-- Settable as the digital assistant app, so the assist gesture (home long-press or side
+                 key) opens search from anywhere. -->
+            <intent-filter>
+                <action android:name="android.intent.action.ASSIST" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
+</activity>
+
+        <!-- Appears in other apps' "Open with" and "Share" menus so a specific file can be labelled. -->
+        <activity
+            android:name=".ui.label.LabelActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:label="Label in finder+"
+            android:theme="@style/Theme.FinderPlus.Translucent">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="video/*" />
+                <data android:mimeType="audio/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="video/*" />
+                <data android:mimeType="audio/*" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.settings.PrivacyActivity"
+            android:exported="true"
+            android:label="Private folders"
+            android:theme="@style/Theme.FinderPlus.Screen" />
+        <!-- Exported only so the launcher's "Free up space" shortcut can open it; it removes nothing
+             without the system's own trash confirmation. -->
+        <activity
+            android:name=".ui.cleanup.CleanupActivity"
+            android:exported="true"
+            android:label="Free up space"
+            android:theme="@style/Theme.FinderPlus.Screen" />
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:exported="false"
+            android:label="Models"
+            android:theme="@style/Theme.FinderPlus.Screen" />
+        <activity
+            android:name=".diagnostics.DiagnosticsActivity"
+            android:exported="false"
+            android:label="Diagnostics"
+            android:theme="@style/Theme.FinderPlus.Screen" />
+        <activity
+            android:name=".ui.settings.PreferencesActivity"
+            android:exported="false"
+            android:label="Settings"
+            android:theme="@style/Theme.FinderPlus.Screen" />
+
+        <!-- Home-screen widget: search entry + update/stop button + live status. -->
+        <receiver
+            android:name=".ui.widget.FinderWidgetReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/finder_widget_info" />
+        </receiver>
+
+        <!-- Android 14+/15: WorkManager's foreground service must declare the dataSync type so the
+             IndexWorker can call startForeground(FOREGROUND_SERVICE_TYPE_DATA_SYNC). -->
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
+
+        <!-- Index control: the notification's Stop action, plus internal start, probe and maintenance actions. -->
+        <receiver
+            android:name="ai.dusty.finderplus.index.IndexControlReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="ai.dusty.finderplus.action.STOP_INDEX" />
+                <action android:name="ai.dusty.finderplus.action.START_INDEX" />
+                <action android:name="ai.dusty.finderplus.action.TEST_ASR" />
+                <action android:name="ai.dusty.finderplus.action.PROBE_BACKENDS" />
+                <action android:name="ai.dusty.finderplus.action.PROBE_CLIP" />
+                <action android:name="ai.dusty.finderplus.action.PROBE_TEXT" />
+                <action android:name="ai.dusty.finderplus.action.PROBE_LABELS" />
+                <action android:name="ai.dusty.finderplus.action.JUDGE" />
+                <action android:name="ai.dusty.finderplus.action.SEED_VOCAB" />
+                <action android:name="ai.dusty.finderplus.action.VAULT_HIDE" />
+                <action android:name="ai.dusty.finderplus.action.VAULT_RESTORE" />
+                <action android:name="ai.dusty.finderplus.action.CLUSTER" />
+                <action android:name="ai.dusty.finderplus.action.RESET_DB" />
+                <action android:name="ai.dusty.finderplus.action.BENCH_CLIP" />
+                <action android:name="ai.dusty.finderplus.action.BENCH_ONNX" />
+                <action android:name="ai.dusty.finderplus.action.PROBE_CONCEPTS" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Applies "Resume after restart" and re-arms the automatic triggers after a reboot. -->
+        <receiver
+            android:name="ai.dusty.finderplus.index.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Hands the tapped media's real bytes to the pasting app (clipboard = the image itself). -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.clips"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <!-- WorkManager on-demand initialization; the factory comes from Hilt (see FinderApp). -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+    
+        <service
+            android:name=".ui.QuickSearchTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_finder_glass"
+            android:label="@string/tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".ui.AccessLaunchService"
+            android:exported="true"
+            android:label="@string/tile_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/access_shortcut" />
+        </service>
+    </application>
+</manifest>

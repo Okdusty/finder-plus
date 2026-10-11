@@ -1,0 +1,5 @@
+package_name("ai.dusty.finderplus")
+
+# F-Droid builds from source and does not need a service-account JSON key.
+# Uncomment and fill in for Google Play uploads:
+# json_key_file("path/to/google-play-api-key.json")

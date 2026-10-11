@@ -1,0 +1,26 @@
+# Build output
+build/
+.cxx/
+.externalNativeBuild/
+.gradle/
+.kotlin/
+captures/
+*.apk
+*.aab
+
+# Machine- and editor-specific
+local.properties
+.idea/
+*.iml
+.DS_Store
+kls_database.db
+__pycache__/
+*.pyc
+
+# Signing keys never go into the repository
+keys/
+*.jks
+*.keystore
+
+# Working session notes
+session-*.md

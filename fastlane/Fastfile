@@ -1,0 +1,18 @@
+default_platform(:android)
+
+platform :android do
+  desc "Build the signed release APK"
+  lane :build do
+    gradle(task: "assembleRelease")
+  end
+
+  desc "Build the installable debug APK"
+  lane :debug do
+    gradle(task: "assembleDebug")
+  end
+
+  desc "Run the unit test suite"
+  lane :test do
+    gradle(task: "test testDebugUnitTest")
+  end
+end

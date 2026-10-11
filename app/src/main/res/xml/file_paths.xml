@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- Clipboard staging: a copy of the tapped media, handed to the pasting app. -->
+    <cache-path name="clip" path="clip/" />
+    <!-- Vault staging: a decrypted copy of a hidden file, so other apps can open it. -->
+    <cache-path name="vault-open" path="vault-open/" />
+</paths>

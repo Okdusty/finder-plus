@@ -1,0 +1,32 @@
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="search"
+        android:enabled="true"
+        android:icon="@drawable/ic_finder_glass"
+        android:shortcutShortLabel="@string/shortcut_search">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="ai.dusty.finderplus"
+            android:targetClass="ai.dusty.finderplus.ui.popup.SearchPopupActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="private"
+        android:enabled="true"
+        android:icon="@drawable/ic_finder_glass"
+        android:shortcutShortLabel="@string/shortcut_private">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="ai.dusty.finderplus"
+            android:targetClass="ai.dusty.finderplus.ui.settings.PrivacyActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="cleanup"
+        android:enabled="true"
+        android:icon="@drawable/ic_finder_glass"
+        android:shortcutShortLabel="@string/shortcut_cleanup">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="ai.dusty.finderplus"
+            android:targetClass="ai.dusty.finderplus.ui.cleanup.CleanupActivity" />
+    </shortcut>
+</shortcuts>
