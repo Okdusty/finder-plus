@@ -57,15 +57,18 @@ object HeatSettings {
         ThermalLine.entries, ThermalLine::label,
     )
     val HEADROOM_STOP = Amount(
-        "heat.headroom_stop", 0.9, HEAT, "Throttling forecast limit",
+        "heat.headroom_stop2", -1.0, HEAT, "Throttling forecast limit",
         "Stops when Android forecasts the phone this close to heavy throttling, where 1.0 is the point " +
-            "it begins. Not every phone reports it. −1 turns this off.",
-        min = 0.1, max = 1.5, minusOne = MinusOne.OFF, decimals = 2, advanced = true,
+            "it begins. −1 uses the phone's own value for the heat level work stops at, or 1.0 when the " +
+            "phone publishes none.",
+        min = 0.1, max = 1.5, minusOne = MinusOne.AUTO, decimals = 2, advanced = true,
     )
     val HEADROOM_START = Amount(
-        "heat.headroom_start", 0.7, HEAT, "Resume below forecast",
-        "A new batch starts only under this forecast. −1 resumes as soon as it is under the limit.",
-        min = 0.1, max = 1.5, minusOne = MinusOne.OFF, decimals = 2, advanced = true,
+        "heat.headroom_start2", -1.0, HEAT, "Resume below forecast",
+        "A new batch starts only under this forecast. −1 uses the phone's own value for the heat level " +
+            "below, and where the phone publishes none, starting is left to the heat level and battery " +
+            "lines: the forecast scale differs by phone, so no single number fits them all.",
+        min = 0.1, max = 1.5, minusOne = MinusOne.AUTO, decimals = 2, advanced = true,
     )
     val RECHECK = Amount(
         "heat.recheck_s", 60.0, HEAT, "Check a hot phone again after",

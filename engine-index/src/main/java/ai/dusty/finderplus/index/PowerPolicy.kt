@@ -57,18 +57,28 @@ data class HeatLimits(
     val statusStop: ThermalLevel?,
 ) {
     companion object {
-        fun fromSettings(): HeatLimits {
+        /**
+         * The lines from the settings. A forecast line left automatic comes from [phoneLines], the
+         * forecast at which the phone itself enters each heat level, when it publishes them. Without
+         * them the stop line is 1.0, which Android defines as the start of severe throttling, and there
+         * is no start line: the forecast's scale differs by phone (one measured at rest reads 0.75),
+         * so the heat level and battery decide when work starts.
+         */
+        fun fromSettings(phoneLines: Map<ThermalLevel, Float> = emptyMap()): HeatLimits {
             fun line(a: ai.dusty.finderplus.settings.Amount) =
                 ai.dusty.finderplus.settings.Settings.valueOrNull(a)?.toFloat()
             val s = ai.dusty.finderplus.settings.HeatSettings
             val status = ai.dusty.finderplus.settings.Settings[s.STATUS_STOP]
+            val statusStop = if (status == ai.dusty.finderplus.settings.ThermalLine.NEVER) null
+                else ThermalLevel.valueOf(status.name)
+            val below = statusStop?.let { ThermalLevel.entries[maxOf(it.ordinal - 1, ThermalLevel.LIGHT.ordinal)] }
             return HeatLimits(
                 batteryStopC = line(s.BATTERY_STOP),
                 batteryStartC = line(s.BATTERY_START),
-                headroomStop = line(s.HEADROOM_STOP),
-                headroomStart = line(s.HEADROOM_START),
-                statusStop = if (status == ai.dusty.finderplus.settings.ThermalLine.NEVER) null
-                    else ThermalLevel.valueOf(status.name),
+                headroomStop = line(s.HEADROOM_STOP)
+                    ?: statusStop?.let { phoneLines[it] ?: if (it == ThermalLevel.SEVERE) 1.0f else null },
+                headroomStart = line(s.HEADROOM_START) ?: below?.let { phoneLines[it] },
+                statusStop = statusStop,
             )
         }
     }
@@ -166,14 +176,37 @@ class PowerPolicy(context: Context, private val unrestricted: () -> Boolean = { 
     }
 
     /** Whether a batch could start now under the heat limits in the settings. */
-    fun tooHotToStart(heat: Heat = heat()): Boolean = PowerDecision.tooHot(heat, starting = true, HeatLimits.fromSettings())
+    fun tooHotToStart(heat: Heat = heat()): Boolean = PowerDecision.tooHot(heat, starting = true, limits())
 
     /** Whether running work would stop now under the heat limits in the settings. */
-    fun tooHotToContinue(heat: Heat = heat()): Boolean = PowerDecision.tooHot(heat, starting = false, HeatLimits.fromSettings())
+    fun tooHotToContinue(heat: Heat = heat()): Boolean = PowerDecision.tooHot(heat, starting = false, limits())
 
     fun throttleMs(): Long =
         if (unrestricted()) PowerDecision.unrestrictedThrottleMs(thermal())
         else PowerDecision.throttleMs(thermal(), powerState())
+
+    /**
+     * The forecast at which this phone enters each heat level, where it publishes them (Android 15+);
+     * empty otherwise. Read once: they are fixed for the device.
+     */
+    private val phoneLines: Map<ThermalLevel, Float> by lazy {
+        if (Build.VERSION.SDK_INT < 35) return@lazy emptyMap()
+        runCatching {
+            power?.thermalHeadroomThresholds.orEmpty().mapNotNull { (status, v) ->
+                val level = when (status) {
+                    PowerManager.THERMAL_STATUS_LIGHT -> ThermalLevel.LIGHT
+                    PowerManager.THERMAL_STATUS_MODERATE -> ThermalLevel.MODERATE
+                    PowerManager.THERMAL_STATUS_SEVERE -> ThermalLevel.SEVERE
+                    PowerManager.THERMAL_STATUS_CRITICAL -> ThermalLevel.CRITICAL
+                    else -> null
+                }
+                if (level == null || v.isNaN()) null else level to v
+            }.toMap()
+        }.getOrDefault(emptyMap())
+    }
+
+    /** The heat lines in force now: the settings, with automatic forecast lines from this phone. */
+    fun limits(): HeatLimits = HeatLimits.fromSettings(phoneLines)
 
     /** Memory the system reports free for apps, in MB. */
     fun availableMb(): Long {
@@ -188,7 +221,7 @@ class PowerPolicy(context: Context, private val unrestricted: () -> Boolean = { 
      */
     fun yieldReason(starting: Boolean = false): YieldReason {
         val heat = heat()
-        if (PowerDecision.tooHot(heat, starting, HeatLimits.fromSettings())) {
+        if (PowerDecision.tooHot(heat, starting, limits())) {
             android.util.Log.i("finderPower", "too hot to ${if (starting) "start" else "continue"}: $heat")
             return YieldReason.THERMAL
         }

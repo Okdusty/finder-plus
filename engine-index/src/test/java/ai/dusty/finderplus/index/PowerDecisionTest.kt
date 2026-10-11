@@ -82,6 +82,26 @@ class PowerDecisionTest {
         assertThat(PowerDecision.tooHot(Heat(ThermalLevel.NONE, 0.5f, 34f), starting = true, shipped)).isFalse()
     }
 
+    @Test fun aCoolPhoneAtRestStartsWork() {
+        // Measured on a phone at rest and cool: no heat level, battery 33 °C, forecast 0.75. A fixed
+        // forecast start line under that kept every batch waiting.
+        val atRest = Heat(ThermalLevel.NONE, headroom = 0.75f, batteryC = 33.1f, processorC = 49.1f)
+        assertThat(PowerDecision.tooHot(atRest, starting = true, shipped)).isFalse()
+    }
+
+    @Test fun thePhonesOwnForecastLinesAreUsedWhenItPublishesThem() {
+        val lines = HeatLimits.fromSettings(mapOf(ThermalLevel.MODERATE to 0.85f, ThermalLevel.SEVERE to 0.95f))
+        assertThat(lines.headroomStop).isEqualTo(0.95f)
+        assertThat(lines.headroomStart).isEqualTo(0.85f)
+        assertThat(PowerDecision.tooHot(Heat(ThermalLevel.NONE, headroom = 0.86f, batteryC = 30f), starting = true, lines)).isTrue()
+        assertThat(PowerDecision.tooHot(Heat(ThermalLevel.NONE, headroom = 0.84f, batteryC = 30f), starting = true, lines)).isFalse()
+    }
+
+    @Test fun withoutThePhonesLinesTheForecastStopsWorkAtSevere() {
+        assertThat(shipped.headroomStop).isEqualTo(1.0f)
+        assertThat(shipped.headroomStart).isNull()
+    }
+
     @Test fun missingReadingsAreNotTreatedAsHot() {
         assertThat(PowerDecision.tooHot(Heat(ThermalLevel.NONE), starting = true, shipped)).isFalse()
     }
