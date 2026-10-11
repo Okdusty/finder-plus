@@ -6,8 +6,9 @@ text: OCR, a caption and object names from Florence-2, face groups, a CLIP vecto
 transcript for anything with audio.<br>
 <div align="center">
   <b>In action shot</b><br>
-  <sub><i>please dont question my gallery. thanks.</i></sub><br><br>
-<img width="360" height="720" alt="Screenshot_20260810_124224_finder+" src="https://github.com/user-attachments/assets/be92665e-c06c-4324-acc0-b39545a0698c" /></div>
+  <sub><i>results that are neither supervised nor hand-labelled</i></sub><br><br>
+<img width="380" height="760" alt="Screenshot_20261011_120609_finder+ dev" src="https://github.com/user-attachments/assets/4109cd29-f31b-46f5-a6e6-eb2486977cdf" />
+</div>
 
 There is no app screen to open. Search is a home-screen widget and a translucent pop-up over whatever
 you were doing. Tapping a result puts the media URI and its extracted text on the clipboard as a
